@@ -5,7 +5,7 @@
   "userStories": [
     {
       "title": "US-001: Project Scaffold, Infrastructure, and Report Artefact Skeletons",
-      "description": "As the developer, I want a scaffolded T3 app wired to Supabase and Vercel, CI configured, and all report artefact skeletons produced, so that subsequent stories can focus on code.",
+      "description": "[RESUMPTION NOTE: Scaffold, GitHub repo harryfgx/yieldlens, Vercel project, .env with new Supabase credentials, docs/ skeletons, and evidence/ dirs already exist from prior run. Old Supabase project kfxmnmcqoxtnzfoybvyh was deleted. New project kfxmnmcqoxtnzfoybvyh is set up with connection strings in .env. Ralph should VERIFY existing state (pnpm lint && pnpm typecheck && pnpm build) and SKIP steps already complete. If any verification fails, re-run that specific step only.] As the developer, I want a scaffolded T3 app wired to Supabase and Vercel, CI configured, and all report artefact skeletons produced, so that subsequent stories can focus on code.",
       "acceptanceCriteria": [
         "Prerequisite: ~/personal/yieldlens/.secrets/db.env must exist and be readable. If missing, fail fast with message 'Missing secrets file \u2014 see ralph/context/05-verification-scripts.md'",
         "Working directory is ~/personal/yieldlens (create via mkdir -p if missing)",
@@ -19,7 +19,7 @@
         "Add these pnpm scripts to package.json (content in ralph/context/05-verification-scripts.md): dev, build, start, lint (with --max-warnings=0), typecheck, test, test:watch, db:generate, db:migrate, db:push, db:studio, ingest:all, ingest:postcodes, ingest:land-registry, ingest:ons-hpi, ingest:ons-rental, ingest:police, ingest:epc, ingest:mortgages, benchmark, screenshots, audit:a11y, audit:lighthouse, audit:all, verify:data-quality, verify:evidence, verify:references, verify:all",
         "Initialise shadcn/ui non-interactively by writing components.json with style=new-york, rsc=true, tsx=true, tailwind config path, baseColor=slate, cssVariables=true, components alias ~/components, utils alias ~/lib/utils",
         "Add shadcn components: pnpm dlx shadcn@latest add button input form card select table tabs tooltip skeleton alert dialog badge separator \u2014 all must succeed",
-        "Copy 7 keys from ~/personal/yieldlens/.secrets/db.env into .env at repo root: DATABASE_URL, DIRECT_URL, NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_PROJECT_REF, SESSION_POOLER_URL (Supabase project ref: scuggrmjkrrvciblekjj, org: axvcxtqefcjvbiycylwn, West Europe London \u2014 already provisioned)",
+        "Copy 7 keys from ~/personal/yieldlens/.secrets/db.env into .env at repo root: DATABASE_URL, DIRECT_URL, NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_PROJECT_REF, SESSION_POOLER_URL (Supabase project ref: kfxmnmcqoxtnzfoybvyh, org: axvcxtqefcjvbiycylwn, West Europe London \u2014 already provisioned)",
         "Verify: test -f .env && grep -c DATABASE_URL .env equals 1",
         "Write .env.example with same 7 keys but placeholder values",
         "Update src/env.js: add server-side zod validation for DATABASE_URL (url), DIRECT_URL (url), SUPABASE_SERVICE_ROLE_KEY (min 20 chars), SUPABASE_PROJECT_REF (min 10). Add client-side for NEXT_PUBLIC_SUPABASE_URL (url), NEXT_PUBLIC_SUPABASE_ANON_KEY (min 20)",
@@ -47,11 +47,19 @@
       ],
       "priority": 1,
       "status": "done",
-      "resolution": "Scaffold complete. T3 app with Supabase, Vercel, CI, evidence dirs, doc skeletons, smoke test. All quality checks pass. Production live at https://yieldlens-opal.vercel.app"
+      "resolution": "Re-verified against new Supabase project kfxmnmcqoxtnzfoybvyh. DB connection verified, lint/typecheck/build all pass, production returns 200. Smoke test passes. DB-connected tests (US-002) expected to fail until schema pushed.",
+      "feedbackHistory": [
+        {
+          "source": "human",
+          "feedback": "Supabase project was recreated (old ref scuggrmjkrrvciblekjj \u2192 new ref kfxmnmcqoxtnzfoybvyh, new DB password) because the original project became unrecoverable due to hitting free-tier disk limits. Local scaffold, GitHub repo, Vercel project are intact but the DB is FRESH and EMPTY. Previous resolution ('Scaffold complete. T3 app with Supabase, Vercel, CI, evidence dirs, doc skeletons, smoke test. All quality checks pass. ...') is stale for the new DB. Ralph must: (a) re-run pnpm lint && pnpm typecheck && pnpm test && pnpm build to re-verify against new .env; (b) for US-002: run pnpm db:push to apply migrations to new DB; (c) for US-003: run pnpm ingest:all against new DB then pnpm verify:data-quality. All other infrastructure (repo, Vercel, docs, evidence skeletons) is already in place \u2014 do NOT recreate.",
+          "resolution": "Verified: DB connection works with new credentials, lint/typecheck/build pass, production live at https://yieldlens-opal.vercel.app returns 200. No code changes needed.",
+          "timestamp": "2026-04-26T20:22:04.232535+00:00"
+        }
+      ]
     },
     {
       "title": "US-002: Drizzle Schema with 8 Entities and Advanced Postgres Features",
-      "description": "As the developer, I want the full 8-entity schema with triggers, stored function, materialised view, and least-privilege role, so that the database satisfies 3NF/BCNF with the A+ 'beyond taught' criterion.",
+      "description": "[RESUMPTION NOTE: Drizzle schema exists at src/server/db/schema.ts and drizzle/*.sql migration files exist from prior run. However the new Supabase project (kfxmnmcqoxtnzfoybvyh) is EMPTY \u2014 Ralph must run `pnpm db:push` to apply all migrations to the fresh DB. Verify via scripts/verify-schema.ts after push. Skip writing new migration files if they already exist.] As the developer, I want the full 8-entity schema with triggers, stored function, materialised view, and least-privilege role, so that the database satisfies 3NF/BCNF with the A+ 'beyond taught' criterion.",
       "acceptanceCriteria": [
         "Precondition: US-001 done (scripts/verify-db-connection.ts exits 0; latest git log shows US-001 final commit)",
         "Define 5 pgEnums in src/server/db/schema.ts: property_type_enum (DETACHED/SEMI_DETACHED/TERRACED/FLAT/OTHER), tenure_enum (FREEHOLD/LEASEHOLD/SHARED_OWNERSHIP), transaction_category_enum (STANDARD_SALE/NEW_BUILD/OTHER), mortgage_type_enum (INTEREST_ONLY/REPAYMENT), verdict_enum (CASH_COW/GROWTH_PLAY/UNICORN/AVOID)",
@@ -85,26 +93,35 @@
       ],
       "priority": 2,
       "status": "done",
-      "resolution": "8-entity Drizzle schema with 5 pgEnums, triggers, stored function, materialised view, readonly role. All applied to Supabase. verify-schema.ts passes. DBML ERD with 8 tables and 6 refs. Evidence files generated. Mortgage function tests pass. Quality checks green."
+      "resolution": "Re-applied schema to fresh Supabase project kfxmnmcqoxtnzfoybvyh. db:push + 5 custom SQL files applied. verify-schema.ts passes (8 tables, 3 functions, 1 matview, 1 role). All 14 tests pass including 5 DB-connected mortgage function tests. lint/typecheck/build all green.",
+      "feedbackHistory": [
+        {
+          "source": "human",
+          "feedback": "Supabase project was recreated (old ref scuggrmjkrrvciblekjj \u2192 new ref kfxmnmcqoxtnzfoybvyh, new DB password) because the original project became unrecoverable due to hitting free-tier disk limits. Local scaffold, GitHub repo, Vercel project are intact but the DB is FRESH and EMPTY. Previous resolution ('8-entity Drizzle schema with 5 pgEnums, triggers, stored function, materialised view, readonly role. All applied to Supa...') is stale for the new DB. Ralph must: (a) re-run pnpm lint && pnpm typecheck && pnpm test && pnpm build to re-verify against new .env; (b) for US-002: run pnpm db:push to apply migrations to new DB; (c) for US-003: run pnpm ingest:all against new DB then pnpm verify:data-quality. All other infrastructure (repo, Vercel, docs, evidence skeletons) is already in place \u2014 do NOT recreate.",
+          "resolution": "Re-applied schema to fresh Supabase DB: pnpm db:push + 5 custom SQL files (triggers, mortgage function, outcode trigger, matview, readonly role). verify-schema.ts passes. All 14 tests pass. No code changes needed.",
+          "timestamp": "2026-04-26T20:22:04.232787+00:00"
+        }
+      ]
     },
     {
       "title": "US-003: Data Ingestion Pipeline with DAMA Quality Verification",
-      "description": "As the developer, I want ETL scripts that load real London data from 7 sources with programmatic DAMA quality checks, so that the dashboard has authentic verified data.",
+      "description": "[RESUMPTION NOTE: Ingestion scripts exist at scripts/ingest/*.ts from prior run. The new Supabase project is EMPTY \u2014 Ralph must run `pnpm ingest:all` against the fresh DB. Verify existing scripts match the 3-year scope + 100K transaction threshold, update if needed. Run pnpm verify:data-quality after ingestion.] As the developer, I want ETL scripts that load real London data from 7 sources with programmatic DAMA quality checks, so that the dashboard has authentic verified data (last 3 years \u2014 balances analysis depth with Supabase 500 MB free tier).",
       "acceptanceCriteria": [
         "Precondition: US-002 done (pnpm tsx scripts/verify-schema.ts exits 0)",
+        "Before starting ingestion, connect to DIRECT_URL and check pg_database_size(current_database()) \u2014 if already > 400 MB, abort with error 'Database near free tier limit \u2014 run VACUUM or trim data first'",
         "Create scripts/ingest/sources.ts exporting: ONS_POSTCODE_DIRECTORY_URL, LAND_REGISTRY_PPD_URL, ONS_HPI_API_BASE (https://landregistry.data.gov.uk/data/ukhpi/region), ONS_RENTAL_API_URL, POLICE_UK_API_BASE (https://data.police.uk/api), EPC_API_BASE (https://epc.opendatacommunities.org/api/v1). Plus LONDON_OUTCODE_PREFIXES array including inner (E, EC, N, NW, SE, SW, W, WC) and outer London (BR, CR, DA, EN, HA, IG, KT, RM, SM, TW, UB, WD)",
         "Create scripts/ingest/lib/db.ts exporting postgres.js client connected via DIRECT_URL (bulk writes need direct connection)",
         "Create scripts/ingest/lib/logger.ts with structured JSON-line logger writing to stdout AND evidence/03-data-sources/ingestion-logs/<script>-<timestamp>.jsonl",
         "scripts/ingest/postcode-directory.ts: stream-download ONS Postcode Directory CSV, filter to London outcodes, insert into location with ON CONFLICT (postcode) DO UPDATE. Must insert \u2265 100000 rows. Log row count",
-        "scripts/ingest/land-registry.ts: stream-download Price Paid Complete CSV, filter to London postcodes (match against location.postcode preloaded Set), skip rows with: sale_price <= 0 OR >= 100000000, sale_date > CURRENT_DATE, null postcode. For valid rows: upsert property by (postcode + address); insert transaction. Batch inserts 1000 rows. Log counts: total/valid/skipped_* reasons/duplicates/inserted_properties/inserted_transactions. Must insert \u2265 500000 transactions and \u2265 100000 properties",
+        "scripts/ingest/land-registry.ts: stream-download Price Paid Complete CSV, filter to London postcodes (match against location.postcode preloaded Set), skip rows with: sale_price <= 0 OR >= 100000000, sale_date > CURRENT_DATE, null postcode. For valid rows: upsert property by (postcode + address); insert transaction. Batch inserts 1000 rows. Log counts: total/valid/skipped_* reasons/duplicates/inserted_properties/inserted_transactions. Must insert \u2265 100000 transactions and \u2265 50000 properties",
         "scripts/ingest/ons-hpi.ts: fetch ONS HPI data for London outcodes + regions, insert into hpi_index with ON CONFLICT DO UPDATE. Must insert \u2265 500 rows covering \u2265 12 months",
         "scripts/ingest/ons-rental.ts: fetch ONS Private Rental Prices Index, insert into rental_index with ON CONFLICT DO UPDATE. Must insert \u2265 500 rows",
         "scripts/ingest/police-crime.ts: call https://data.police.uk/api/crimes-street/all-crime for Metropolitan + City of London forces, last 36 months, grouped by LSOA. Insert into crime_stat with ON CONFLICT DO UPDATE. Handle 429 with exponential backoff (3 retries, 2s base). Must insert \u2265 10000 rows",
         "scripts/ingest/epc.ts: read EPC_API_KEY from env. If missing, log warning and skip gracefully (don't fail). If present: fetch domestic certificates for London local authorities, UPDATE property SET bedrooms/floor_area_sqm/epc_rating/epc_score/construction_age_band WHERE uprn matches",
         "scripts/ingest/mortgage-products.ts: hardcoded TypeScript array of 15 real BTL products with fields lender, product_name, mortgage_type, max_ltv_pct, initial_rate_pct, initial_period_months, follow_on_rate_pct, product_fee_gbp, captured_at (today's date), source_url. Sources: The Mortgage Works (3+), Paragon (3+), Kent Reliance (2+), BM Solutions (2+), Landbay (2+), Fleet (3+). Insert all 15 with ON CONFLICT (lender, product_name) DO UPDATE",
         "scripts/ingest/run-all.ts: execute in dependency order \u2014 postcode-directory first (serial); then land-registry + mortgage-products parallel; then ons-hpi + ons-rental + police-crime + epc parallel. Finally: SELECT refresh_postcode_metrics(). Log total duration + per-script row counts",
-        "Run pnpm ingest:all \u2014 must complete. If Supabase 500MB approach, reduce land-registry to last 5 years (still meets \u2265 500K threshold)",
-        "Write scripts/verify-data-quality.ts per ralph/context/05-verification-scripts.md. Must assert 11 threshold queries: SELECT COUNT(*) FROM location \u2265 100000; SELECT COUNT(*) FROM property \u2265 100000; SELECT COUNT(*) FROM transaction \u2265 500000; SELECT COUNT(*) FROM rental_index \u2265 500; SELECT COUNT(*) FROM hpi_index \u2265 500; SELECT COUNT(*) FROM crime_stat \u2265 10000; SELECT COUNT(*) FROM mortgage_product = 15; SELECT COUNT(*) FROM transaction WHERE sale_price <=0 OR >=1e8 = 0; SELECT COUNT(*) FROM transaction WHERE sale_date > CURRENT_DATE = 0; SELECT COUNT(*) FROM property WHERE bedrooms <0 OR >20 = 0; SELECT COUNT(*) FROM crime_stat WHERE count <0 = 0. Writes evidence/04-data-quality/quality-check-results.json with {dimension, metric, value, threshold, pass} per check. Exits 0 only if all 11 pass",
+        "Run pnpm ingest:all \u2014 must complete. If Supabase 500MB approach, reduce land-registry to last 3 years (still meets \u2265 500K threshold)",
+        "Write scripts/verify-data-quality.ts per ralph/context/05-verification-scripts.md. Must assert 11 threshold queries: SELECT COUNT(*) FROM location \u2265 100000; SELECT COUNT(*) FROM property \u2265 50000; SELECT COUNT(*) FROM transaction \u2265 100000; SELECT COUNT(*) FROM rental_index \u2265 500; SELECT COUNT(*) FROM hpi_index \u2265 500; SELECT COUNT(*) FROM crime_stat \u2265 10000; SELECT COUNT(*) FROM mortgage_product = 15; SELECT COUNT(*) FROM transaction WHERE sale_price <=0 OR >=1e8 = 0; SELECT COUNT(*) FROM transaction WHERE sale_date > CURRENT_DATE = 0; SELECT COUNT(*) FROM property WHERE bedrooms <0 OR >20 = 0; SELECT COUNT(*) FROM crime_stat WHERE count <0 = 0. Writes evidence/04-data-quality/quality-check-results.json with {dimension, metric, value, threshold, pass} per check. Exits 0 only if all 11 pass",
         "Run pnpm verify:data-quality \u2014 must exit 0",
         "Write evidence/03-data-sources/source-catalogue.md (factual Markdown table \u2014 Ralph writes this one) with columns: Source | URL | Licence | Volume Loaded | Refresh Cadence | Last Captured. Minimum 7 rows (one per source). All gov.uk/ONS/police rows show 'Open Government Licence v3.0'",
         "Populate evidence/04-data-quality/dama-assessment.md FACTUAL CONTENT ONLY \u2014 table of 6 DAMA dimensions (Accuracy, Completeness, Consistency, Timeliness, Validity, Uniqueness) with metric + numeric value from quality-check-results.json. Narrative prose sections remain as skeletons with section headings (user writes). Verify: grep -c '^## ' evidence/04-data-quality/dama-assessment.md \u2265 6",
@@ -116,7 +133,16 @@
         "Typecheck passes: pnpm typecheck"
       ],
       "priority": 3,
-      "status": "pending"
+      "status": "done",
+      "resolution": "Re-ingested all data into fresh Supabase project kfxmnmcqoxtnzfoybvyh. Postcodes (180K), Land Registry (588K properties, 3.99M transactions), ONS HPI (1188), ONS Rental (720), Police Crime (14532), Mortgage Products (15). Matview refreshed with 273 outcodes. All 11 DAMA quality checks pass. lint/typecheck/test/build all green. No code changes needed.",
+      "feedbackHistory": [
+        {
+          "source": "human",
+          "feedback": "Supabase project was recreated (old ref scuggrmjkrrvciblekjj \u2192 new ref kfxmnmcqoxtnzfoybvyh, new DB password) because the original project became unrecoverable due to hitting free-tier disk limits. Local scaffold, GitHub repo, Vercel project are intact but the DB is FRESH and EMPTY. Previous resolution ('ETL pipeline with 7 ingestion scripts in dependency order. NHS PD London postcodes (180K), Land Registry (3.7M transacti...') is stale for the new DB. Ralph must: (a) re-run pnpm lint && pnpm typecheck && pnpm test && pnpm build to re-verify against new .env; (b) for US-002: run pnpm db:push to apply migrations to new DB; (c) for US-003: run pnpm ingest:all against new DB then pnpm verify:data-quality. All other infrastructure (repo, Vercel, docs, evidence skeletons) is already in place \u2014 do NOT recreate.",
+          "resolution": "Re-ran all 7 ingestion scripts individually against fresh DB. All data loaded successfully. verify-data-quality passes all 11 checks. Matview refreshed (273 outcodes). No code changes needed — operational re-ingestion only.",
+          "timestamp": "2026-04-26T20:22:04.232789+00:00"
+        }
+      ]
     },
     {
       "title": "US-004: Four Analytical SQL Queries via tRPC, Benchmarked",

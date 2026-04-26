@@ -9,14 +9,14 @@
   {
     "dimension": "Completeness",
     "metric": "property_count",
-    "value": 717365,
+    "value": 587672,
     "threshold": 100000,
     "pass": true
   },
   {
     "dimension": "Completeness",
     "metric": "transaction_count",
-    "value": 3733709,
+    "value": 3992314,
     "threshold": 490000,
     "pass": true
   },
@@ -37,7 +37,7 @@
   {
     "dimension": "Completeness",
     "metric": "crime_stat_count",
-    "value": 16631,
+    "value": 14532,
     "threshold": 10000,
     "pass": true
   },

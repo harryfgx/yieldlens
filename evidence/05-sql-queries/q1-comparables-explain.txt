@@ -1,0 +1,32 @@
+-- Q1 Comparables
+-- EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)
+
+Aggregate  (cost=5592.91..5592.92 rows=1 width=36) (actual time=23.836..29.106 rows=1 loops=1)
+  Buffers: shared hit=27185
+  ->  Nested Loop  (cost=1024.97..5592.88 rows=1 width=20) (actual time=23.830..29.099 rows=0 loops=1)
+        Buffers: shared hit=27185
+        ->  Gather  (cost=1024.55..5591.34 rows=1 width=24) (actual time=23.829..29.098 rows=0 loops=1)
+              Workers Planned: 1
+              Workers Launched: 1
+              Buffers: shared hit=27185
+              ->  Nested Loop  (cost=24.55..4591.24 rows=1 width=24) (actual time=20.071..20.072 rows=0 loops=2)
+                    Buffers: shared hit=27185
+                    ->  Parallel Bitmap Heap Scan on transaction t  (cost=24.12..2126.07 rows=1170 width=10) (actual time=0.690..6.242 rows=3028 loops=2)
+                          Recheck Cond: (((outcode)::text = 'SE16'::text) AND (sale_date >= (CURRENT_DATE - '2 years'::interval)))
+                          Heap Blocks: exact=1749
+                          Buffers: shared hit=2964
+                          ->  Bitmap Index Scan on idx_transaction_outcode_date  (cost=0.00..23.62 rows=1989 width=0) (actual time=0.935..0.935 rows=6055 loops=1)
+                                Index Cond: (((outcode)::text = 'SE16'::text) AND (sale_date >= (CURRENT_DATE - '2 years'::interval)))
+                                Buffers: shared hit=12
+                    ->  Index Scan using property_pkey on property p  (cost=0.42..2.11 rows=1 width=22) (actual time=0.004..0.004 rows=0 loops=6055)
+                          Index Cond: (property_id = t.property_id)
+                          Filter: ((bedrooms = '2'::smallint) AND (property_type = 'FLAT'::property_type_enum) AND ((floor_area_sqm IS NULL) OR ((floor_area_sqm >= '56'::numeric) AND (floor_area_sqm <= '84'::numeric))))
+                          Rows Removed by Filter: 1
+                          Buffers: shared hit=24221
+        ->  Index Only Scan using location_pkey on location l  (cost=0.42..1.54 rows=1 width=4) (never executed)
+              Index Cond: (location_id = p.location_id)
+              Heap Fetches: 0
+Planning:
+  Buffers: shared hit=337
+Planning Time: 1.306 ms
+Execution Time: 29.258 ms

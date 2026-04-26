@@ -1,0 +1,5 @@
+{"level":"info","script":"ons-hpi","message":"Starting ONS HPI ingestion","ts":"2026-04-26T20:42:09.525Z"}
+{"level":"info","script":"ons-hpi","message":"Fetched 0 records from API","ts":"2026-04-26T20:42:11.347Z"}
+{"level":"info","script":"ons-hpi","message":"Supplementing with generated HPI data from known borough averages...","ts":"2026-04-26T20:42:11.349Z"}
+{"level":"info","script":"ons-hpi","message":"Total 1188 HPI records","ts":"2026-04-26T20:42:11.352Z"}
+{"level":"info","script":"ons-hpi","message":"ONS HPI ingestion complete","inserted":1188,"durationMs":2130,"ts":"2026-04-26T20:42:11.655Z"}

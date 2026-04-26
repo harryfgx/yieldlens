@@ -1,0 +1,28 @@
+-- Q4 Quadrant
+-- EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)
+
+Index Scan using mv_postcode_investment_metrics_outcode_idx on public.mv_postcode_investment_metrics  (cost=0.15..10.81 rows=273 width=32) (actual time=0.019..0.137 rows=273 loops=1)
+  Output: outcode, avg_yield_pct, yoy_price_growth_pct, yield_quartile, growth_quartile, quadrant
+  Buffers: shared hit=145
+Query Identifier: 884000393600252603
+Planning:
+  Buffers: shared hit=9
+Planning Time: 0.097 ms
+Execution Time: 0.173 ms
+
+-- Analysis:
+-- Q4 reads from the materialised view mv_postcode_investment_metrics which
+-- precomputes yield, growth, volatility, crime, and quadrant classification
+-- for all 273 London outcodes. The query uses an index-only scan on the
+-- unique outcode index, returning all rows in outcode order.
+--
+-- Performance characteristics:
+-- - Sub-millisecond execution (0.2ms) due to materialised view
+-- - All data served from shared buffers (145 pages)
+-- - No disk I/O required after initial cache warm-up
+-- - The materialised view is refreshed via refresh_postcode_metrics()
+--   after each data ingestion cycle
+--
+-- The simplicity of this plan is by design: the heavy computation
+-- (NTILE window functions, CASE classification, multi-table aggregation)
+-- happens at materialised view refresh time, not at query time.

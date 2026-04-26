@@ -1,0 +1,28 @@
+-- Q2 Historical Drilldown
+-- EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)
+
+WindowAgg  (cost=5624.59..5690.81 rows=1477 width=164) (actual time=30.081..30.239 rows=59 loops=1)
+  Buffers: shared hit=6405
+  ->  WindowAgg  (cost=5624.36..5650.19 rows=1477 width=68) (actual time=30.071..30.141 rows=59 loops=1)
+        Buffers: shared hit=6405
+        ->  Sort  (cost=5624.35..5628.04 rows=1477 width=36) (actual time=30.060..30.066 rows=59 loops=1)
+              Sort Key: monthly_prices.month
+              Sort Method: quicksort  Memory: 27kB
+              Buffers: shared hit=6405
+              ->  Subquery Scan on monthly_prices  (cost=5494.90..5546.59 rows=1477 width=36) (actual time=29.977..30.031 rows=59 loops=1)
+                    Buffers: shared hit=6402
+                    ->  HashAggregate  (cost=5494.90..5531.82 rows=1477 width=48) (actual time=29.976..30.022 rows=59 loops=1)
+                          Group Key: date_trunc('month'::text, (t.sale_date)::timestamp without time zone)
+                          Batches: 1  Memory Usage: 97kB
+                          Buffers: shared hit=6402
+                          ->  Bitmap Heap Scan on transaction t  (cost=77.49..5468.13 rows=5353 width=22) (actual time=10.760..26.463 rows=14046 loops=1)
+                                Recheck Cond: ((outcode IS NOT NULL) AND ((outcode)::text = 'SE16'::text) AND (sale_date >= (CURRENT_DATE - '5 years'::interval)))
+                                Heap Blocks: exact=6377
+                                Buffers: shared hit=6402
+                                ->  Bitmap Index Scan on idx_transaction_outcode_date  (cost=0.00..76.15 rows=5353 width=0) (actual time=9.873..9.873 rows=14046 loops=1)
+                                      Index Cond: ((outcode IS NOT NULL) AND ((outcode)::text = 'SE16'::text) AND (sale_date >= (CURRENT_DATE - '5 years'::interval)))
+                                      Buffers: shared hit=25
+Planning:
+  Buffers: shared hit=31
+Planning Time: 0.301 ms
+Execution Time: 30.447 ms

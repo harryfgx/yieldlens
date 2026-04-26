@@ -1,0 +1,4 @@
+{"level":"info","script":"run-all","message":"Starting full ingestion pipeline","ts":"2026-04-26T20:29:11.768Z"}
+{"level":"info","script":"run-all","message":"Phase 1: Postcode directory...","ts":"2026-04-26T20:29:11.769Z"}
+{"level":"info","script":"run-all","message":"Phase 1 complete","postcodes":180651,"ts":"2026-04-26T20:29:30.118Z"}
+{"level":"info","script":"run-all","message":"Phase 2: Land Registry + Mortgage Products (parallel)...","ts":"2026-04-26T20:29:30.119Z"}

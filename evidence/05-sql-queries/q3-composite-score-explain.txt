@@ -1,0 +1,56 @@
+-- Q3 Composite Score
+-- EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)
+
+Nested Loop  (cost=701.94..712.29 rows=1 width=168) (actual time=10.318..10.370 rows=1 loops=1)
+  Buffers: shared hit=384
+  ->  Nested Loop  (cost=701.94..710.83 rows=1 width=72) (actual time=9.844..9.892 rows=1 loops=1)
+        Buffers: shared hit=377
+        ->  Nested Loop  (cost=37.45..46.32 rows=1 width=40) (actual time=0.693..0.739 rows=1 loops=1)
+              Buffers: shared hit=9
+              ->  Subquery Scan on quartiles  (cost=34.98..43.84 rows=1 width=8) (actual time=0.666..0.710 rows=1 loops=1)
+                    Filter: ((quartiles.outcode)::text = 'SE16'::text)
+                    Rows Removed by Filter: 272
+                    Buffers: shared hit=7
+                    ->  WindowAgg  (cost=34.98..40.43 rows=273 width=48) (actual time=0.617..0.676 rows=273 loops=1)
+                          Buffers: shared hit=7
+                          ->  Sort  (cost=34.97..35.65 rows=273 width=44) (actual time=0.578..0.595 rows=273 loops=1)
+                                Sort Key: ((mv_postcode_investment_metrics.avg_yield_pct)::numeric)
+                                Sort Method: quicksort  Memory: 35kB
+                                Buffers: shared hit=7
+                                ->  WindowAgg  (cost=18.48..23.92 rows=273 width=44) (actual time=0.414..0.462 rows=273 loops=1)
+                                      Buffers: shared hit=4
+                                      ->  Sort  (cost=18.46..19.14 rows=273 width=40) (actual time=0.361..0.378 rows=273 loops=1)
+                                            Sort Key: mv_postcode_investment_metrics.yoy_price_growth_pct
+                                            Sort Method: quicksort  Memory: 35kB
+                                            Buffers: shared hit=4
+                                            ->  Seq Scan on mv_postcode_investment_metrics  (cost=0.00..7.41 rows=273 width=40) (actual time=0.022..0.243 rows=273 loops=1)
+                                                  Buffers: shared hit=4
+              ->  Aggregate  (cost=2.46..2.47 rows=1 width=32) (actual time=0.022..0.023 rows=1 loops=1)
+                    Buffers: shared hit=2
+                    ->  Index Scan using idx_hpi_outcode_date on hpi_index  (cost=0.28..2.46 rows=1 width=6) (actual time=0.020..0.020 rows=0 loops=1)
+                          Index Cond: (((outcode)::text = 'SE16'::text) AND (reference_month >= (CURRENT_DATE - '3 years'::interval)))
+                          Buffers: shared hit=2
+        ->  Aggregate  (cost=664.49..664.50 rows=1 width=32) (actual time=9.149..9.150 rows=1 loops=1)
+              Buffers: shared hit=368
+              ->  Merge Join  (cost=90.16..656.49 rows=3200 width=4) (actual time=6.866..8.832 rows=3744 loops=1)
+                    Merge Cond: ((cs.lsoa_code)::text = (l.lsoa_code)::text)
+                    Buffers: shared hit=368
+                    ->  Index Scan using idx_crime_stat_lsoa on crime_stat cs  (cost=0.29..482.34 rows=14510 width=14) (actual time=0.021..5.019 rows=14223 loops=1)
+                          Filter: (reference_month >= (CURRENT_DATE - '1 year'::interval))
+                          Rows Removed by Filter: 22
+                          Buffers: shared hit=350
+                    ->  Sort  (cost=89.87..92.54 rows=1066 width=10) (actual time=0.905..1.207 rows=4792 loops=1)
+                          Sort Key: l.lsoa_code
+                          Sort Method: quicksort  Memory: 49kB
+                          Buffers: shared hit=18
+                          ->  Index Scan using idx_location_outcode on location l  (cost=0.29..36.27 rows=1066 width=10) (actual time=0.028..0.305 rows=1100 loops=1)
+                                Index Cond: ((outcode)::text = 'SE16'::text)
+                                Buffers: shared hit=18
+  ->  Seq Scan on mortgage_product mp  (cost=0.00..1.19 rows=1 width=16) (actual time=0.017..0.021 rows=1 loops=1)
+        Filter: (mortgage_product_id = 1)
+        Rows Removed by Filter: 14
+        Buffers: shared hit=1
+Planning:
+  Buffers: shared hit=274
+Planning Time: 1.638 ms
+Execution Time: 10.683 ms

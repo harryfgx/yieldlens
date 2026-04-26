@@ -6,6 +6,9 @@ export default defineConfig({
     environment: "jsdom",
     include: ["tests/**/*.test.ts", "tests/**/*.test.tsx"],
     setupFiles: ["dotenv/config"],
+    env: {
+      SKIP_ENV_VALIDATION: "true",
+    },
   },
   resolve: {
     alias: {

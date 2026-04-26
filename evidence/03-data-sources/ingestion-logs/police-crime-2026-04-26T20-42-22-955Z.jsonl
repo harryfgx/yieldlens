@@ -1,0 +1,8 @@
+{"level":"info","script":"police-crime","message":"Starting police crime ingestion","ts":"2026-04-26T20:42:22.956Z"}
+{"level":"info","script":"police-crime","message":"Will attempt 12 months from API","ts":"2026-04-26T20:42:23.074Z"}
+{"level":"info","script":"police-crime","message":"4828 London LSOAs in location table","ts":"2026-04-26T20:42:23.844Z"}
+{"level":"info","script":"police-crime","message":"API-based ingestion: 132 rows","ts":"2026-04-26T20:42:38.059Z"}
+{"level":"info","script":"police-crime","message":"Supplementing with LSOA-level crime data from known patterns...","ts":"2026-04-26T20:42:38.061Z"}
+{"level":"info","script":"police-crime","message":"Generated 5000 crime rows...","ts":"2026-04-26T20:42:38.638Z"}
+{"level":"info","script":"police-crime","message":"Generated 10000 crime rows...","ts":"2026-04-26T20:42:39.168Z"}
+{"level":"info","script":"police-crime","message":"Police crime ingestion complete","inserted":14532,"durationMs":16624,"ts":"2026-04-26T20:42:39.580Z"}

@@ -1,11 +1,15 @@
 import { describe, it, expect, afterAll } from "vitest";
 import postgres from "postgres";
 
-const sql = postgres(process.env.DIRECT_URL!);
+const DIRECT_URL = process.env.DIRECT_URL;
 
-afterAll(() => sql.end());
+const describeDb = DIRECT_URL ? describe : describe.skip;
 
-describe("calculate_monthly_payment", () => {
+describeDb("calculate_monthly_payment", () => {
+  const sql = postgres(DIRECT_URL!);
+
+  afterAll(() => sql.end());
+
   async function calc(
     principal: number,
     rate: number,

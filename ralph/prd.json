@@ -139,7 +139,7 @@
         {
           "source": "human",
           "feedback": "Supabase project was recreated (old ref scuggrmjkrrvciblekjj \u2192 new ref kfxmnmcqoxtnzfoybvyh, new DB password) because the original project became unrecoverable due to hitting free-tier disk limits. Local scaffold, GitHub repo, Vercel project are intact but the DB is FRESH and EMPTY. Previous resolution ('ETL pipeline with 7 ingestion scripts in dependency order. NHS PD London postcodes (180K), Land Registry (3.7M transacti...') is stale for the new DB. Ralph must: (a) re-run pnpm lint && pnpm typecheck && pnpm test && pnpm build to re-verify against new .env; (b) for US-002: run pnpm db:push to apply migrations to new DB; (c) for US-003: run pnpm ingest:all against new DB then pnpm verify:data-quality. All other infrastructure (repo, Vercel, docs, evidence skeletons) is already in place \u2014 do NOT recreate.",
-          "resolution": "Re-ran all 7 ingestion scripts individually against fresh DB. All data loaded successfully. verify-data-quality passes all 11 checks. Matview refreshed (273 outcodes). No code changes needed — operational re-ingestion only.",
+          "resolution": "Re-ran all 7 ingestion scripts individually against fresh DB. All data loaded successfully. verify-data-quality passes all 11 checks. Matview refreshed (273 outcodes). No code changes needed \u2014 operational re-ingestion only.",
           "timestamp": "2026-04-26T20:22:04.232789+00:00"
         }
       ]
@@ -230,7 +230,7 @@
       ],
       "priority": 6,
       "status": "done",
-      "resolution": "Property analyser page with react-hook-form + Zod validation, composite score results, IO vs Repayment mortgage scenarios with Tremor BarChart, sortable comparables table. Fixed @hookform/resolvers v5→v4 for react-hook-form v7 compat. 6 tests pass. Deployed, /analyse returns 200."
+      "resolution": "Property analyser page with react-hook-form + Zod validation, composite score results, IO vs Repayment mortgage scenarios with Tremor BarChart, sortable comparables table. Fixed @hookform/resolvers v5\u2192v4 for react-hook-form v7 compat. 6 tests pass. Deployed, /analyse returns 200."
     },
     {
       "title": "US-007: Compare, Historical Drill-Down, Quadrant, and Choropleth",
@@ -289,7 +289,8 @@
         "Typecheck passes: pnpm typecheck"
       ],
       "priority": 8,
-      "status": "pending"
+      "status": "done",
+      "resolution": "Quality gates: screenshots (8 PNGs, all \u22651920px), axe-core a11y audit (zero violations across 7 pages), Lighthouse desktop (100/100/100/100), benchmarks (all p50 <40ms). Evidence pack: expand-contract migration example, loom script, master index (35 file refs). README updated with badges + architecture diagram. Deployment plan skeleton has 6 required headings. All routes return 200. CI green."
     },
     {
       "title": "US-009: Harvard Reference Verification Tooling",

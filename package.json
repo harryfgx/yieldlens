@@ -31,6 +31,7 @@
     "verify:data-quality": "tsx scripts/verify-data-quality.ts",
     "verify:evidence": "tsx scripts/verify-evidence.ts",
     "verify:references": "tsx scripts/verify-references.ts",
+    "check-citations": "tsx scripts/check-citations.ts",
     "verify:all": "pnpm lint && pnpm typecheck && pnpm test && pnpm build"
   },
   "dependencies": {

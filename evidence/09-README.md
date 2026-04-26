@@ -48,4 +48,5 @@
 | `evidence/08-deployment/supabase-project.png` | Supabase project overview screenshot (HUMAN) | Deployment | A8 |
 | `evidence/08-deployment/ci-pipeline-run.png` | GitHub Actions CI run screenshot (HUMAN) | Deployment | A8 |
 | `evidence/09-README.md` | This file — master evidence index | All | — |
+| `evidence/10-references/verification-report.json` | Automated reference verification results (Google Books + CrossRef) | References | A10 |
 | `evidence/HUMAN_TODO.md` | Manual tasks checklist for user | — | — |

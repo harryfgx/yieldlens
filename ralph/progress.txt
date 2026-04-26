@@ -18,6 +18,9 @@ Started: Sun 26 Apr 2026 19:11:33 BST
 - Tables use raw names (no `yieldlens_` prefix) — drizzle.config.ts has no tablesFilter
 - Empty tRPC router breaks createHydrationHelpers type — always have ≥1 procedure
 - Custom SQL (triggers, functions, matview) applied separately from Drizzle push — not managed by drizzle-kit
+- `@hookform/resolvers` v5 requires react-hook-form v8 — use v4 with RHF v7
+- Radix Select doesn't render dropdown content in jsdom — avoid testing Select interactions directly
+- ResizeObserver, hasPointerCapture, scrollIntoView polyfills needed in vitest-setup.ts for Radix/Tremor in jsdom
 - Matview refresh deferred until after data ingestion (empty tables produce empty view)
 - NHS PD gridy56.zip has separate header CSV and data CSV — read header first, apply columns to data
 - postgres.js `sql.unsafe()` needs explicit type cast: `params as (string | number | null)[]`
@@ -385,4 +388,48 @@ Started: Sun 26 Apr 2026 19:11:33 BST
   - vitest needs `globals: true` and `@vitejs/plugin-react` for JSX test files
   - Tests importing ingestion scripts must mock `scripts/ingest/lib/db.js` to prevent process.exit in CI
   - shadcn Skeleton needs `role="status"` for accessible loading state detection in tests
+---
+
+## 2026-04-26T22:30 - US-006: Property Analyser (What-If Calculator) Page
+- Fixed @hookform/resolvers v5→v4 for react-hook-form v7 compatibility (type error)
+- All US-006 files were pre-existing in working tree from prior agent run
+- Fixed analyse.test.tsx test that failed due to Radix Select not rendering in jsdom
+- Added ResizeObserver + hasPointerCapture + scrollIntoView polyfills to vitest-setup.ts
+- Deployed to Vercel production, /analyse returns 200
+- Files changed: package.json (resolver downgrade), pnpm-lock.yaml, tests/setup/vitest-setup.ts (polyfills), tests/app/analyse.test.tsx (test fix), src/app/analyse/page.tsx, src/lib/mortgage.ts, src/lib/analyse-schema.ts, src/components/ui/progress.tsx, src/components/ui/slider.tsx, tests/lib/mortgage.test.ts
+- Also marked US-005 as done in PRD (was completed in prior iteration but PRD not updated)
+- **Acceptance Criteria Verification:**
+  - [x] Precondition: US-005 done (home page returns 200)
+  - [x] src/lib/mortgage.ts: calculateMonthlyPayment matching PL/pgSQL function
+  - [x] tests/lib/mortgage.test.ts: 5 cases (300k/5.5/25/REPAYMENT, 300k/5.5/25/IO, 300k/0/25/REPAYMENT, 0/5.5/25/REPAYMENT, 500k/4.25/30/REPAYMENT)
+  - [x] src/lib/analyse-schema.ts: Zod schema with postcode regex, bedrooms 1-6, propertyType enum, askingPrice 50k-10M, rent 100-20k, depositPct 5-50 default 25, mortgageProductId positive int
+  - [x] src/app/analyse/page.tsx: React Hook Form + zodResolver, 7 form fields (postcode, bedrooms Select, propertyType Select, askingPrice £, rent £, depositPct Slider, mortgageProductId Select from listMortgageProducts)
+  - [x] Inline validation errors via fieldState.error.message in text-destructive
+  - [x] Submit disabled while isSubmitting
+  - [x] On submit: compositeScore + comparables mutations called
+  - [x] Results card: large Badge with score (red<40/amber 40-60/green>60), verdict Badge with emoji, 4 Progress bars, grossYieldPct + netYieldPct stat cards with tooltips
+  - [x] Mortgage scenarios: two Cards (Interest-Only / Repayment), monthly payment, total paid, remaining balance, server value in italics if differs >£1
+  - [x] Tremor BarChart: rent income, mortgage payment, costs 25%, net cashflow per scenario with aria-label
+  - [x] Comparables table: shadcn Table, sortable, ≤10 rows, <3 comparables shows Alert
+  - [x] Empty state: "Enter a property above to analyse" with BarChart3 icon
+  - [x] Error state: Alert variant=destructive with Retry button
+  - [x] Mobile responsive: form stacks below md, results stack, table overflow-x-auto
+  - [x] tests/app/analyse.test.tsx: 6 tests (7 fields render, empty postcode error, askingPrice=30000 error, valid input no errors, results card with score, IO+Repayment cards)
+  - [x] Deploy: vercel --prod returns 200 at /analyse
+  - [x] pnpm lint: passes (0 warnings)
+  - [x] pnpm typecheck: passes
+  - [x] pnpm test: 40/40 pass (9 test files)
+  - [x] pnpm build: passes
+  - [x] Committed and pushed
+  - [x] Typecheck passes
+- **Testing & Confidence:**
+  - 5 mortgage unit tests verify client-side calculation matches DB function
+  - 6 analyse page tests verify form rendering, validation, and results display
+  - All 40 tests pass across 9 files
+  - Production deployment verified with curl
+  - Aligns with AGENTS.md: yes
+- **Learnings for future iterations:**
+  - @hookform/resolvers v5 requires react-hook-form v8 — use v4 with RHF v7
+  - Radix Select doesn't render dropdown content in jsdom — avoid testing Select interactions directly
+  - ResizeObserver, hasPointerCapture, scrollIntoView polyfills needed for Radix/Tremor in jsdom
 ---

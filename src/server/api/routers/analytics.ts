@@ -522,4 +522,121 @@ export const analyticsRouter = createTRPCRouter({
     `);
     return result as Record<string, unknown>[];
   }),
+
+  /** Historical findings — compare outcode trends to region. */
+  historicalFindings: publicProcedure
+    .input(z.object({ outcode: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const oc = input.outcode.toUpperCase();
+      const result = await ctx.db.execute(sql`
+        WITH outcode_recent AS (
+          SELECT
+            AVG(t.sale_price::numeric) AS avg_price,
+            STDDEV(t.sale_price::numeric) AS price_stddev,
+            COUNT(*)::int AS tx_count
+          FROM transaction t
+          WHERE t.outcode = ${oc}
+            AND t.sale_date >= CURRENT_DATE - INTERVAL '12 months'
+        ),
+        outcode_prior AS (
+          SELECT AVG(t.sale_price::numeric) AS avg_price
+          FROM transaction t
+          WHERE t.outcode = ${oc}
+            AND t.sale_date >= CURRENT_DATE - INTERVAL '24 months'
+            AND t.sale_date < CURRENT_DATE - INTERVAL '12 months'
+        ),
+        region_recent AS (
+          SELECT AVG(t.sale_price::numeric) AS avg_price
+          FROM transaction t
+          WHERE t.outcode IS NOT NULL
+            AND t.sale_date >= CURRENT_DATE - INTERVAL '12 months'
+        ),
+        region_prior AS (
+          SELECT AVG(t.sale_price::numeric) AS avg_price
+          FROM transaction t
+          WHERE t.outcode IS NOT NULL
+            AND t.sale_date >= CURRENT_DATE - INTERVAL '24 months'
+            AND t.sale_date < CURRENT_DATE - INTERVAL '12 months'
+        )
+        SELECT
+          or2.avg_price AS oc_avg,
+          op.avg_price AS oc_prior_avg,
+          rr.avg_price AS reg_avg,
+          rp.avg_price AS reg_prior_avg,
+          or2.price_stddev AS oc_stddev,
+          or2.tx_count
+        FROM outcode_recent or2
+        CROSS JOIN outcode_prior op
+        CROSS JOIN region_recent rr
+        CROSS JOIN region_prior rp
+      `);
+
+      const row = result[0];
+      if (!row || num(row.tx_count) === 0) {
+        return [];
+      }
+
+      const findings: { title: string; description: string; value: string }[] = [];
+      const ocAvg = num(row.oc_avg);
+      const ocPrior = num(row.oc_prior_avg);
+      const regAvg = num(row.reg_avg);
+      const regPrior = num(row.reg_prior_avg);
+
+      // YoY growth comparison
+      if (ocPrior > 0 && regPrior > 0) {
+        const ocGrowth = ((ocAvg - ocPrior) / ocPrior) * 100;
+        const regGrowth = ((regAvg - regPrior) / regPrior) * 100;
+        const diff = ocGrowth - regGrowth;
+        findings.push({
+          title: diff > 0 ? "Outperforming London" : "Underperforming London",
+          description: `${oc} prices grew ${Math.abs(ocGrowth).toFixed(1)}% YoY vs London average of ${regGrowth.toFixed(1)}%.`,
+          value: `${diff > 0 ? "+" : ""}${diff.toFixed(1)}pp`,
+        });
+      }
+
+      // Volatility
+      const stddev = num(row.oc_stddev);
+      if (ocAvg > 0 && stddev > 0) {
+        const cv = (stddev / ocAvg) * 100;
+        findings.push({
+          title: cv > 50 ? "High Price Volatility" : "Moderate Price Stability",
+          description: `Coefficient of variation is ${cv.toFixed(1)}% over the last 12 months.`,
+          value: `CV ${cv.toFixed(1)}%`,
+        });
+      }
+
+      // Transaction volume
+      const txCount = num(row.tx_count);
+      findings.push({
+        title: txCount > 100 ? "Active Market" : "Low Liquidity",
+        description: `${txCount} transactions recorded in the last 12 months.`,
+        value: `${txCount} sales`,
+      });
+
+      return findings.slice(0, 3);
+    }),
+
+  /** Crime statistics aggregated by borough. */
+  crimeByBorough: publicProcedure.query(async ({ ctx }) => {
+    const result = await ctx.db.execute(sql`
+      SELECT
+        l.borough,
+        SUM(cs.count)::int AS total_crimes,
+        COUNT(DISTINCT l.lsoa_code)::int AS lsoa_count,
+        ROUND((SUM(cs.count)::numeric / NULLIF(COUNT(DISTINCT l.lsoa_code), 0)), 2) AS crime_rate
+      FROM crime_stat cs
+      JOIN location l ON l.lsoa_code = cs.lsoa_code
+      WHERE cs.reference_month >= CURRENT_DATE - INTERVAL '12 months'
+        AND l.borough IS NOT NULL
+      GROUP BY l.borough
+      ORDER BY crime_rate DESC
+    `);
+
+    return (result as Record<string, unknown>[]).map((r) => ({
+      borough: str(r.borough),
+      total_crimes: num(r.total_crimes),
+      lsoa_count: num(r.lsoa_count),
+      crime_rate: num(r.crime_rate),
+    }));
+  }),
 });

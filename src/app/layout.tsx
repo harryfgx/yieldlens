@@ -6,6 +6,7 @@ import { Geist } from "next/font/google";
 import { TRPCReactProvider } from "~/trpc/react";
 import { SiteNav } from "~/components/site-nav";
 import { SiteFooter } from "~/components/site-footer";
+import { Toaster } from "~/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "YieldLens — London BTL Investment Analysis",
@@ -37,6 +38,7 @@ export default function RootLayout({
             {children}
           </main>
           <SiteFooter />
+          <Toaster />
         </TRPCReactProvider>
       </body>
     </html>

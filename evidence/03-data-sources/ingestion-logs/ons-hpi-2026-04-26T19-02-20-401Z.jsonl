@@ -1,0 +1,3 @@
+{"level":"info","script":"ons-hpi","message":"Starting ONS HPI ingestion","ts":"2026-04-26T19:02:20.402Z"}
+{"level":"info","script":"ons-hpi","message":"Fetched 0 HPI records","ts":"2026-04-26T19:02:28.612Z"}
+{"level":"warn","script":"ons-hpi","message":"No HPI data fetched — check API availability","ts":"2026-04-26T19:02:28.612Z"}

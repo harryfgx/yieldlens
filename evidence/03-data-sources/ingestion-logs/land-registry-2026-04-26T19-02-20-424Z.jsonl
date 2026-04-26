@@ -1,0 +1,6 @@
+{"level":"info","script":"land-registry","message":"Starting Land Registry ingestion","ts":"2026-04-26T19:02:20.425Z"}
+{"level":"info","script":"land-registry","message":"Loading London postcodes from location table...","ts":"2026-04-26T19:02:20.425Z"}
+{"level":"info","script":"land-registry","message":"Loaded 180651 London postcodes","ts":"2026-04-26T19:02:20.617Z"}
+{"level":"info","script":"land-registry","message":"Building postcode → location_id map...","ts":"2026-04-26T19:02:20.618Z"}
+{"level":"info","script":"land-registry","message":"Downloading Land Registry Price Paid Data...","ts":"2026-04-26T19:02:20.740Z"}
+{"level":"info","script":"land-registry","message":"Land Registry ingestion complete","totalRows":31092167,"validRows":507648,"skipped":{"invalid_price":347,"future_date":0,"null_postcode":49819,"not_london":30534353},"insertedProperties":485365,"insertedTransactions":497572,"durationMs":248355,"ts":"2026-04-26T19:06:28.780Z"}

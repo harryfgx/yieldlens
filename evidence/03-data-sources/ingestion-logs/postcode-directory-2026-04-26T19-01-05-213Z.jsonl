@@ -1,0 +1,16 @@
+{"level":"info","script":"postcode-directory","message":"Starting postcode directory ingestion","ts":"2026-04-26T19:01:05.214Z"}
+{"level":"info","script":"postcode-directory","message":"Downloading NHS PD London region file...","ts":"2026-04-26T19:01:05.214Z"}
+{"level":"info","script":"postcode-directory","message":"Download complete","ts":"2026-04-26T19:01:05.576Z"}
+{"level":"info","script":"postcode-directory","message":"Extracting ZIP...","ts":"2026-04-26T19:01:05.576Z"}
+{"level":"info","script":"postcode-directory","message":"Columns","count":49,"sample":["PCD2","PCDS","DOINTR","DOTERM","OSEAST100M","OSNRTH100M","OSCTY","ODSLAUA","OSLAUA","OSWARD"],"ts":"2026-04-26T19:01:05.996Z"}
+{"level":"info","script":"postcode-directory","message":"Data file","path":"/Users/harryfg/personal/yieldlens/.tmp/postcodes/gridy56.csv","size":130871891,"ts":"2026-04-26T19:01:05.996Z"}
+{"level":"info","script":"postcode-directory","message":"Inserted 20000 rows...","ts":"2026-04-26T19:01:08.304Z"}
+{"level":"info","script":"postcode-directory","message":"Inserted 40000 rows...","ts":"2026-04-26T19:01:10.509Z"}
+{"level":"info","script":"postcode-directory","message":"Inserted 60000 rows...","ts":"2026-04-26T19:01:12.712Z"}
+{"level":"info","script":"postcode-directory","message":"Inserted 80000 rows...","ts":"2026-04-26T19:01:14.850Z"}
+{"level":"info","script":"postcode-directory","message":"Inserted 100000 rows...","ts":"2026-04-26T19:01:17.005Z"}
+{"level":"info","script":"postcode-directory","message":"Inserted 120000 rows...","ts":"2026-04-26T19:01:19.243Z"}
+{"level":"info","script":"postcode-directory","message":"Inserted 140000 rows...","ts":"2026-04-26T19:01:21.377Z"}
+{"level":"info","script":"postcode-directory","message":"Inserted 160000 rows...","ts":"2026-04-26T19:01:23.629Z"}
+{"level":"info","script":"postcode-directory","message":"Inserted 180000 rows...","ts":"2026-04-26T19:01:25.847Z"}
+{"level":"info","script":"postcode-directory","message":"Postcode directory ingestion complete","inserted":180651,"skipped":151656,"durationMs":20737,"ts":"2026-04-26T19:01:25.951Z"}

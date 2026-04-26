@@ -1,0 +1,79 @@
+[
+  {
+    "dimension": "Completeness",
+    "metric": "location_count",
+    "value": 180651,
+    "threshold": 100000,
+    "pass": true
+  },
+  {
+    "dimension": "Completeness",
+    "metric": "property_count",
+    "value": 717365,
+    "threshold": 100000,
+    "pass": true
+  },
+  {
+    "dimension": "Completeness",
+    "metric": "transaction_count",
+    "value": 3733709,
+    "threshold": 490000,
+    "pass": true
+  },
+  {
+    "dimension": "Completeness",
+    "metric": "rental_index_count",
+    "value": 720,
+    "threshold": 500,
+    "pass": true
+  },
+  {
+    "dimension": "Completeness",
+    "metric": "hpi_index_count",
+    "value": 1188,
+    "threshold": 500,
+    "pass": true
+  },
+  {
+    "dimension": "Completeness",
+    "metric": "crime_stat_count",
+    "value": 16631,
+    "threshold": 10000,
+    "pass": true
+  },
+  {
+    "dimension": "Completeness",
+    "metric": "mortgage_product_count",
+    "value": 15,
+    "threshold": 15,
+    "pass": true
+  },
+  {
+    "dimension": "Validity",
+    "metric": "invalid_sale_prices",
+    "value": 0,
+    "threshold": 0,
+    "pass": true
+  },
+  {
+    "dimension": "Timeliness",
+    "metric": "future_sale_dates",
+    "value": 0,
+    "threshold": 0,
+    "pass": true
+  },
+  {
+    "dimension": "Validity",
+    "metric": "invalid_bedrooms",
+    "value": 0,
+    "threshold": 0,
+    "pass": true
+  },
+  {
+    "dimension": "Validity",
+    "metric": "negative_crime_counts",
+    "value": 0,
+    "threshold": 0,
+    "pass": true
+  }
+]

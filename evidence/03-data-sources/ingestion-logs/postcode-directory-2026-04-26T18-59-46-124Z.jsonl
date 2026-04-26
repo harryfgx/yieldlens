@@ -1,0 +1,6 @@
+{"level":"info","script":"postcode-directory","message":"Starting postcode directory ingestion","ts":"2026-04-26T18:59:46.124Z"}
+{"level":"info","script":"postcode-directory","message":"Downloading NHS PD London region file...","ts":"2026-04-26T18:59:46.125Z"}
+{"level":"info","script":"postcode-directory","message":"Download complete","ts":"2026-04-26T18:59:46.385Z"}
+{"level":"info","script":"postcode-directory","message":"Extracting ZIP...","ts":"2026-04-26T18:59:46.386Z"}
+{"level":"info","script":"postcode-directory","message":"Columns","count":49,"sample":["PCD2","PCDS","DOINTR","DOTERM","OSEAST100M","OSNRTH100M","OSCTY","ODSLAUA","OSLAUA","OSWARD"],"ts":"2026-04-26T18:59:46.805Z"}
+{"level":"info","script":"postcode-directory","message":"Data file","path":"/Users/harryfg/personal/yieldlens/.tmp/postcodes/gridy56.csv","size":130871891,"ts":"2026-04-26T18:59:46.805Z"}

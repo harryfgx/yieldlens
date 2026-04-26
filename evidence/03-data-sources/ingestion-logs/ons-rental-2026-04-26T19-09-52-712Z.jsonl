@@ -1,0 +1,4 @@
+{"level":"info","script":"ons-rental","message":"Starting ONS Rental Index ingestion","ts":"2026-04-26T19:09:52.713Z"}
+{"level":"info","script":"ons-rental","message":"Only 0 records from CSV, generating from known ONS patterns...","ts":"2026-04-26T19:09:52.929Z"}
+{"level":"info","script":"ons-rental","message":"Prepared 720 rental index records","ts":"2026-04-26T19:09:52.930Z"}
+{"level":"info","script":"ons-rental","message":"ONS Rental ingestion complete","inserted":720,"durationMs":436,"ts":"2026-04-26T19:09:53.149Z"}

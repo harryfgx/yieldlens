@@ -1,0 +1,2 @@
+{"level":"info","script":"mortgage-products","message":"Starting mortgage products ingestion","count":15,"ts":"2026-04-26T18:55:10.960Z"}
+{"level":"info","script":"mortgage-products","message":"Mortgage products ingestion complete","count":15,"durationMs":206,"ts":"2026-04-26T18:55:11.166Z"}

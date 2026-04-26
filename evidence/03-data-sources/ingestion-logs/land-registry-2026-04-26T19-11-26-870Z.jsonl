@@ -1,0 +1,5 @@
+{"level":"info","script":"land-registry","message":"Starting Land Registry ingestion","ts":"2026-04-26T19:11:26.871Z"}
+{"level":"info","script":"land-registry","message":"Loading London postcodes from location table...","ts":"2026-04-26T19:11:26.871Z"}
+{"level":"info","script":"land-registry","message":"Loaded 180651 London postcodes","ts":"2026-04-26T19:11:27.307Z"}
+{"level":"info","script":"land-registry","message":"Building postcode → location_id map...","ts":"2026-04-26T19:11:27.309Z"}
+{"level":"info","script":"land-registry","message":"Downloading Land Registry Price Paid Data...","ts":"2026-04-26T19:11:27.486Z"}

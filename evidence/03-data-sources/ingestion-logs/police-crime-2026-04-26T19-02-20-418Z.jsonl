@@ -1,0 +1,30 @@
+{"level":"info","script":"police-crime","message":"Starting police crime ingestion","ts":"2026-04-26T19:02:20.419Z"}
+{"level":"info","script":"police-crime","message":"Available dates: 36 months","latest":"2026-02","earliest":"2023-03","ts":"2026-04-26T19:02:20.527Z"}
+{"level":"info","script":"police-crime","message":"Will ingest 12 months","ts":"2026-04-26T19:02:20.527Z"}
+{"level":"info","script":"police-crime","message":"4828 London LSOAs in location table","ts":"2026-04-26T19:02:20.698Z"}
+{"level":"info","script":"police-crime","message":"Fetching metropolitan crimes for 2026-02...","ts":"2026-04-26T19:02:20.699Z"}
+{"level":"info","script":"police-crime","message":"Fetching city-of-london crimes for 2026-02...","ts":"2026-04-26T19:02:21.220Z"}
+{"level":"info","script":"police-crime","message":"Fetching metropolitan crimes for 2026-01...","ts":"2026-04-26T19:02:21.764Z"}
+{"level":"info","script":"police-crime","message":"Fetching city-of-london crimes for 2026-01...","ts":"2026-04-26T19:02:22.287Z"}
+{"level":"info","script":"police-crime","message":"Fetching metropolitan crimes for 2025-12...","ts":"2026-04-26T19:02:22.916Z"}
+{"level":"info","script":"police-crime","message":"Fetching city-of-london crimes for 2025-12...","ts":"2026-04-26T19:02:23.438Z"}
+{"level":"info","script":"police-crime","message":"Fetching metropolitan crimes for 2025-11...","ts":"2026-04-26T19:02:24.058Z"}
+{"level":"info","script":"police-crime","message":"Fetching city-of-london crimes for 2025-11...","ts":"2026-04-26T19:02:24.578Z"}
+{"level":"info","script":"police-crime","message":"Fetching metropolitan crimes for 2025-10...","ts":"2026-04-26T19:02:25.208Z"}
+{"level":"info","script":"police-crime","message":"Fetching city-of-london crimes for 2025-10...","ts":"2026-04-26T19:02:25.730Z"}
+{"level":"info","script":"police-crime","message":"Fetching metropolitan crimes for 2025-09...","ts":"2026-04-26T19:02:26.354Z"}
+{"level":"info","script":"police-crime","message":"Fetching city-of-london crimes for 2025-09...","ts":"2026-04-26T19:02:26.880Z"}
+{"level":"info","script":"police-crime","message":"Fetching metropolitan crimes for 2025-08...","ts":"2026-04-26T19:02:27.520Z"}
+{"level":"info","script":"police-crime","message":"Fetching city-of-london crimes for 2025-08...","ts":"2026-04-26T19:02:28.337Z"}
+{"level":"info","script":"police-crime","message":"Fetching metropolitan crimes for 2025-07...","ts":"2026-04-26T19:02:28.956Z"}
+{"level":"info","script":"police-crime","message":"Fetching city-of-london crimes for 2025-07...","ts":"2026-04-26T19:02:29.477Z"}
+{"level":"info","script":"police-crime","message":"Fetching metropolitan crimes for 2025-06...","ts":"2026-04-26T19:02:30.084Z"}
+{"level":"info","script":"police-crime","message":"Fetching city-of-london crimes for 2025-06...","ts":"2026-04-26T19:02:30.605Z"}
+{"level":"info","script":"police-crime","message":"Fetching metropolitan crimes for 2025-05...","ts":"2026-04-26T19:02:31.215Z"}
+{"level":"info","script":"police-crime","message":"Fetching city-of-london crimes for 2025-05...","ts":"2026-04-26T19:02:31.739Z"}
+{"level":"info","script":"police-crime","message":"Fetching metropolitan crimes for 2025-04...","ts":"2026-04-26T19:02:32.359Z"}
+{"level":"info","script":"police-crime","message":"Fetching city-of-london crimes for 2025-04...","ts":"2026-04-26T19:02:32.881Z"}
+{"level":"info","script":"police-crime","message":"Fetching metropolitan crimes for 2025-03...","ts":"2026-04-26T19:02:33.500Z"}
+{"level":"info","script":"police-crime","message":"Fetching city-of-london crimes for 2025-03...","ts":"2026-04-26T19:02:34.022Z"}
+{"level":"info","script":"police-crime","message":"Only 132 rows from force-level API, fetching neighbourhood data...","ts":"2026-04-26T19:02:34.648Z"}
+{"level":"info","script":"police-crime","message":"Police crime ingestion complete","inserted":2231,"durationMs":224530,"ts":"2026-04-26T19:06:04.949Z"}

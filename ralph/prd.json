@@ -46,7 +46,8 @@
         "Typecheck passes: pnpm typecheck"
       ],
       "priority": 1,
-      "status": "pending"
+      "status": "done",
+      "resolution": "Scaffold complete. T3 app with Supabase, Vercel, CI, evidence dirs, doc skeletons, smoke test. All quality checks pass. Production live at https://yieldlens-opal.vercel.app"
     },
     {
       "title": "US-002: Drizzle Schema with 8 Entities and Advanced Postgres Features",
@@ -83,7 +84,8 @@
         "Typecheck passes: pnpm typecheck"
       ],
       "priority": 2,
-      "status": "pending"
+      "status": "done",
+      "resolution": "8-entity Drizzle schema with 5 pgEnums, triggers, stored function, materialised view, readonly role. All applied to Supabase. verify-schema.ts passes. DBML ERD with 8 tables and 6 refs. Evidence files generated. Mortgage function tests pass. Quality checks green."
     },
     {
       "title": "US-003: Data Ingestion Pipeline with DAMA Quality Verification",

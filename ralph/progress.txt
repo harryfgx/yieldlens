@@ -1,3 +1,137 @@
 # Ralph Progress Log
 Started: Sun 26 Apr 2026 19:11:33 BST
+
+## Codebase Patterns
+- `.npmrc` at repo root overrides Amazon CodeArtifact with `registry=https://registry.npmjs.org/`
+- Git identity is repo-scoped: `harryfgoatcher@gmail.com` (not global Amazon email)
+- `DATABASE_URL` (port 6543) for app queries; `DIRECT_URL` (port 5432) for migrations/scripts
+- shadcn/ui requires `class-variance-authority`, `clsx`, `tailwind-merge` as explicit deps
+- T3 scaffold post table/router removed in US-002 — replaced with health router placeholder
+- `vercel env add <key> preview "" --yes` — empty string 3rd arg skips interactive branch prompt
+- `SKIP_ENV_VALIDATION=true` in CI to skip env validation during build
+- Vitest config at `vitest.config.ts` with `~` alias pointing to `./src`
+- Tests go in `tests/` directory (not `src/__tests__/`)
+- vitest needs `setupFiles: ["dotenv/config"]` for DB-connected tests
+- Tables use raw names (no `yieldlens_` prefix) — drizzle.config.ts has no tablesFilter
+- Empty tRPC router breaks createHydrationHelpers type — always have ≥1 procedure
+- Custom SQL (triggers, functions, matview) applied separately from Drizzle push — not managed by drizzle-kit
+- Matview refresh deferred until after data ingestion (empty tables produce empty view)
+---
+
+## 2026-04-26T19:35 - US-001: Project Scaffold, Infrastructure, and Report Artefact Skeletons
+- Scaffolded T3 app (Next.js 15, tRPC, Drizzle, Tailwind, ESLint)
+- Created .npmrc to override Amazon CodeArtifact registry
+- Set repo-scoped git config (harryfgoatcher@gmail.com)
+- Installed all runtime + dev deps (tremor, nivo, vitest, playwright, etc.)
+- Initialised shadcn/ui with 13 components
+- Copied 7 env vars from .secrets/db.env to .env
+- Updated src/env.js with Zod validation for all server + client vars
+- Created + verified DB connection script (scripts/verify-db-connection.ts)
+- Created public GitHub repo harryfgx/yieldlens, pushed
+- Linked Vercel, added env vars to all 3 scopes, deployed to production
+- Production live at https://yieldlens-opal.vercel.app (HTTP 200)
+- Created CI workflow (.github/workflows/ci.yml) — CI green
+- Set 8 repo topics
+- Created evidence/ with 9 subdirectories + HUMAN_TODO.md
+- Created 9 doc skeletons with required section headings + docs/AGENTS.md
+- Created README.md with all required sections
+- Created smoke test (tests/setup/smoke.test.ts)
+- Added all pnpm scripts per verification-scripts.md
+- Files changed: ~50 files across scaffold, config, docs, evidence, tests
+- **Acceptance Criteria Verification:**
+  - [x] .secrets/db.env exists and readable
+  - [x] Working directory is ~/personal/yieldlens
+  - [x] .npmrc created with registry=https://registry.npmjs.org/
+  - [x] T3 scaffold ran successfully
+  - [x] Scaffold files verified (package.json, tsconfig.json, etc.)
+  - [x] git init with repo-scoped config
+  - [x] .gitignore updated with project-specific entries
+  - [x] Runtime deps installed
+  - [x] Dev deps installed
+  - [x] pnpm scripts added per spec
+  - [x] shadcn/ui initialised with components.json
+  - [x] 13 shadcn components added
+  - [x] 7 env vars copied to .env
+  - [x] .env.example with placeholder values
+  - [x] src/env.js updated with Zod validation
+  - [x] scripts/verify-db-connection.ts exits 0
+  - [x] GitHub repo created (public, MIT)
+  - [x] First commit + push
+  - [x] Vercel linked, .vercel/project.json exists
+  - [x] Env vars in all 3 Vercel scopes
+  - [x] vercel --prod deployed, returns 200
+  - [x] CI workflow created, CI green
+  - [x] Repo topics set
+  - [x] evidence/ with 9 dirs + HUMAN_TODO.md
+  - [x] 9 doc skeletons with required headings
+  - [x] docs/AGENTS.md created
+  - [x] README.md with all sections
+  - [x] Smoke test passes
+  - [x] pnpm lint && typecheck && test && build all exit 0
+  - [x] Final commit + push
+  - [x] Final state: 10 docs, 9 evidence dirs, GitHub URL correct, production 200
+  - [x] Typecheck passes
+- **Testing & Confidence:**
+  - Smoke test verifies env parsing
+  - All 4 quality gates pass (lint, typecheck, test, build)
+  - CI green on GitHub Actions
+  - Production deployment verified with curl
+  - Aligns with AGENTS.md: yes (registry override, git identity, connection strings documented)
+- **Learnings for future iterations:**
+  - vercel env add for preview scope requires empty string as 3rd arg to skip branch prompt
+  - T3 scaffold creates a post table/router that needs DB schema pushed before production works
+  - shadcn/ui needs class-variance-authority, clsx, tailwind-merge as explicit deps
+  - Use --value flag or pipe for non-interactive vercel env operations
+---
+
+## 2026-04-26T19:43 - US-002: Drizzle Schema with 8 Entities and Advanced Postgres Features
+- Defined 5 pgEnums and 8 tables in src/server/db/schema.ts with JSDoc comments
+- Created 6 SQL migration files: Drizzle-generated DDL + triggers + stored function + matview + readonly role
+- Applied all to Supabase via db:push + custom SQL execution
+- Removed old T3 scaffold post table/router, replaced with health router placeholder
+- Updated drizzle.config.ts to use DIRECT_URL and removed yieldlens_ table prefix
+- Created verify-schema.ts asserting 8 tables, 3 functions, 1 matview, 1 role
+- Created DBML ERD at evidence/01-erd/yieldlens-erd-uml.dbml (8 tables, 6 refs)
+- Created evidence/02-schema-ddl/schema-full.sql (11900 bytes), advanced-features.sql (5728 bytes), migrations/
+- Populated docs/data-model.md Entity Catalogue (8 entities with attribute tables) + Indexing Strategy (19 indexes)
+- Added vitest dotenv/config setup for DB-connected tests
+- Files changed: schema.ts, drizzle.config.ts, 6 SQL files, verify-schema.ts, DBML, evidence files, data-model.md, root.ts, health.ts, page.tsx, vitest.config.ts
+- **Acceptance Criteria Verification:**
+  - [x] Precondition: verify-db-connection.ts exits 0
+  - [x] 5 pgEnums defined (property_type, tenure, transaction_category, mortgage_type, verdict)
+  - [x] location table with all specified columns + indexes
+  - [x] property table with FK → location, bedrooms CHECK
+  - [x] transaction table with FK → property, outcode denorm, CHECK constraints, composite index
+  - [x] rental_index table with unique constraint
+  - [x] hpi_index table with unique constraint + descending index
+  - [x] crime_stat table with lsoa index, unique constraint, CHECK count >= 0
+  - [x] mortgage_product table with all fields
+  - [x] investor_scenario table with uuid PK, FK → mortgage_product
+  - [x] JSDoc comments on all tables
+  - [x] pnpm db:generate produces ≥1 SQL file (6 files)
+  - [x] 0001_triggers_and_functions.sql with trigger_set_timestamp + triggers on location/property
+  - [x] 0002_mortgage_function.sql with calculate_monthly_payment IMMUTABLE
+  - [x] 0003_outcode_trigger.sql with maintain_transaction_outcode trigger
+  - [x] 0004_materialised_view.sql with mv_postcode_investment_metrics + refresh function
+  - [x] 0005_readonly_role.sql with app_readonly role + grants
+  - [x] pnpm db:push exits 0 (matview on empty tables deferred to post-ingestion)
+  - [x] verify-schema.ts exits 0 (8 tables, 3 functions, 1 matview, 1 role)
+  - [x] DBML: 8 tables, 6 Ref lines
+  - [x] schema-full.sql > 5000 bytes (11900)
+  - [x] migrations copied, count matches drizzle/ (6)
+  - [x] advanced-features.sql > 1500 bytes (5728)
+  - [x] Mortgage function tests: 5 cases all pass
+  - [x] data-model.md: ≥6 ## headings (6), ≥8 ### headings (12), Entity Catalogue + Indexing Strategy populated
+  - [x] pnpm lint && typecheck && test && build all exit 0
+  - [x] Typecheck passes
+- **Testing & Confidence:**
+  - 5 DB-connected mortgage function tests verify stored function correctness
+  - verify-schema.ts confirms all DB objects exist
+  - All 4 quality gates pass (lint, typecheck, test, build)
+  - Aligns with AGENTS.md: yes (DIRECT_URL for migrations, matview refresh documented)
+- **Learnings for future iterations:**
+  - T3 scaffold creates yieldlens_ table prefix via pgTableCreator — removed for clean table names
+  - Empty tRPC router causes type error in createHydrationHelpers — need at least one procedure
+  - vitest needs `setupFiles: ["dotenv/config"]` for DB-connected tests to find DIRECT_URL
+  - Drizzle db:push is interactive when renaming tables — drop old table first or use --force
 ---

@@ -41,3 +41,15 @@ The `mv_postcode_investment_metrics` view must be refreshed after any data inges
 SELECT refresh_postcode_metrics();
 ```
 If the view fails on empty tables, defer refresh until after ingestion completes.
+
+## Schema Management
+
+- Drizzle manages table DDL via `pnpm db:push` (reads `DIRECT_URL`)
+- Custom SQL (triggers, functions, matview, roles) lives in `drizzle/0001-0005_*.sql` and is applied separately via `pnpm tsx` script — drizzle-kit does not manage these
+- Tables use raw names (no prefix) — `drizzle.config.ts` has no `tablesFilter`
+- Old T3 scaffold `yieldlens_post` table was dropped in US-002
+
+## tRPC Router
+
+- Empty router breaks `createHydrationHelpers` type inference — always keep ≥1 procedure
+- Health router at `src/server/api/routers/health.ts` serves as placeholder

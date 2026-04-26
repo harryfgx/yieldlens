@@ -1,0 +1,104 @@
+// YieldLens ERD — UML multiplicity notation
+// 8 tables, 6 FK relationships
+
+Table location {
+  location_id serial [pk]
+  postcode varchar [unique, not null]
+  outcode varchar [not null]
+  borough varchar
+  region varchar
+  lsoa_code varchar
+  lat numeric(9,6)
+  lng numeric(9,6)
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+}
+
+Table property {
+  property_id serial [pk]
+  uprn bigint [unique]
+  location_id integer [not null]
+  address_line_1 varchar
+  address_line_2 varchar
+  city varchar
+  property_type property_type_enum
+  tenure tenure_enum
+  bedrooms smallint
+  floor_area_sqm numeric(8,2)
+  epc_rating varchar
+  epc_score smallint
+  construction_age_band varchar
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+}
+
+Table transaction {
+  transaction_id serial [pk]
+  property_id integer [not null]
+  outcode varchar [note: 'Controlled denormalisation — maintained by trigger from property.location.outcode']
+  sale_price numeric(12,2) [not null]
+  sale_date date [not null]
+  transaction_category transaction_category_enum
+  created_at timestamptz [not null, default: `now()`]
+}
+
+Table rental_index {
+  rental_index_id serial [pk]
+  region varchar [not null]
+  reference_month date [not null]
+  index_value numeric(8,2)
+  monthly_pct_change numeric(5,2)
+  annual_pct_change numeric(5,2)
+}
+
+Table hpi_index {
+  hpi_index_id serial [pk]
+  outcode varchar [not null]
+  reference_month date [not null]
+  average_price numeric(12,2)
+  index_value numeric(8,2)
+  annual_pct_change numeric(5,2)
+}
+
+Table crime_stat {
+  crime_stat_id serial [pk]
+  lsoa_code varchar [not null]
+  reference_month date [not null]
+  category varchar [not null]
+  count integer [not null]
+}
+
+Table mortgage_product {
+  mortgage_product_id serial [pk]
+  lender varchar [not null]
+  product_name varchar [not null]
+  mortgage_type mortgage_type_enum [not null]
+  max_ltv_pct numeric(5,2)
+  initial_rate_pct numeric(5,3)
+  initial_period_months smallint
+  follow_on_rate_pct numeric(5,3)
+  product_fee_gbp numeric(8,2)
+  captured_at date
+  source_url varchar
+}
+
+Table investor_scenario {
+  scenario_id uuid [pk, default: `gen_random_uuid()`]
+  shareable_slug varchar [unique]
+  target_postcode varchar
+  asking_price numeric(12,2)
+  expected_monthly_rent numeric(10,2)
+  deposit_pct numeric(5,2)
+  mortgage_product_id integer
+  composite_score numeric(5,2)
+  verdict verdict_enum
+  created_at timestamptz [not null, default: `now()`]
+}
+
+// Relationships — UML multiplicity: 1..1 — 0..*
+Ref: property.location_id > location.location_id           // 1..1 location — 0..* property
+Ref: transaction.property_id > property.property_id        // 1..1 property — 0..* transaction
+Ref: crime_stat.lsoa_code > location.lsoa_code             // 1..1 location — 0..* crime_stat (via lsoa_code)
+Ref: rental_index.region > location.region                  // 0..* location — 0..* rental_index (via region)
+Ref: hpi_index.outcode > location.outcode                   // 0..* location — 0..* hpi_index (via outcode)
+Ref: investor_scenario.mortgage_product_id > mortgage_product.mortgage_product_id // 1..1 mortgage_product — 0..* investor_scenario

@@ -1,0 +1,844 @@
+{
+  "id": "8fb22748-42e4-4b30-ad79-5f930b86a2cc",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.crime_stat": {
+      "name": "crime_stat",
+      "schema": "",
+      "columns": {
+        "crime_stat_id": {
+          "name": "crime_stat_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "lsoa_code": {
+          "name": "lsoa_code",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reference_month": {
+          "name": "reference_month",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category": {
+          "name": "category",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "count": {
+          "name": "count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "idx_crime_stat_lsoa": {
+          "name": "idx_crime_stat_lsoa",
+          "columns": [
+            {
+              "expression": "lsoa_code",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "uq_crime_lsoa_month_cat": {
+          "name": "uq_crime_lsoa_month_cat",
+          "columns": [
+            {
+              "expression": "lsoa_code",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "reference_month",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "category",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "chk_crime_count": {
+          "name": "chk_crime_count",
+          "value": "count >= 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.hpi_index": {
+      "name": "hpi_index",
+      "schema": "",
+      "columns": {
+        "hpi_index_id": {
+          "name": "hpi_index_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "outcode": {
+          "name": "outcode",
+          "type": "varchar(6)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reference_month": {
+          "name": "reference_month",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "average_price": {
+          "name": "average_price",
+          "type": "numeric(12, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "index_value": {
+          "name": "index_value",
+          "type": "numeric(8, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "annual_pct_change": {
+          "name": "annual_pct_change",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "uq_hpi_outcode_month": {
+          "name": "uq_hpi_outcode_month",
+          "columns": [
+            {
+              "expression": "outcode",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "reference_month",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_hpi_outcode_date": {
+          "name": "idx_hpi_outcode_date",
+          "columns": [
+            {
+              "expression": "outcode",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "\"reference_month\" DESC",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.investor_scenario": {
+      "name": "investor_scenario",
+      "schema": "",
+      "columns": {
+        "scenario_id": {
+          "name": "scenario_id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "shareable_slug": {
+          "name": "shareable_slug",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "target_postcode": {
+          "name": "target_postcode",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "asking_price": {
+          "name": "asking_price",
+          "type": "numeric(12, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "expected_monthly_rent": {
+          "name": "expected_monthly_rent",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deposit_pct": {
+          "name": "deposit_pct",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mortgage_product_id": {
+          "name": "mortgage_product_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "composite_score": {
+          "name": "composite_score",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "verdict": {
+          "name": "verdict",
+          "type": "verdict_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "investor_scenario_mortgage_product_id_mortgage_product_mortgage_product_id_fk": {
+          "name": "investor_scenario_mortgage_product_id_mortgage_product_mortgage_product_id_fk",
+          "tableFrom": "investor_scenario",
+          "tableTo": "mortgage_product",
+          "columnsFrom": [
+            "mortgage_product_id"
+          ],
+          "columnsTo": [
+            "mortgage_product_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "investor_scenario_shareable_slug_unique": {
+          "name": "investor_scenario_shareable_slug_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "shareable_slug"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.location": {
+      "name": "location",
+      "schema": "",
+      "columns": {
+        "location_id": {
+          "name": "location_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "postcode": {
+          "name": "postcode",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "outcode": {
+          "name": "outcode",
+          "type": "varchar(6)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "borough": {
+          "name": "borough",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "region": {
+          "name": "region",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lsoa_code": {
+          "name": "lsoa_code",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lat": {
+          "name": "lat",
+          "type": "numeric(9, 6)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lng": {
+          "name": "lng",
+          "type": "numeric(9, 6)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "idx_location_outcode": {
+          "name": "idx_location_outcode",
+          "columns": [
+            {
+              "expression": "outcode",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_location_postcode": {
+          "name": "idx_location_postcode",
+          "columns": [
+            {
+              "expression": "postcode",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "location_postcode_unique": {
+          "name": "location_postcode_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "postcode"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.mortgage_product": {
+      "name": "mortgage_product",
+      "schema": "",
+      "columns": {
+        "mortgage_product_id": {
+          "name": "mortgage_product_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "lender": {
+          "name": "lender",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "product_name": {
+          "name": "product_name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mortgage_type": {
+          "name": "mortgage_type",
+          "type": "mortgage_type_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "max_ltv_pct": {
+          "name": "max_ltv_pct",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "initial_rate_pct": {
+          "name": "initial_rate_pct",
+          "type": "numeric(5, 3)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "initial_period_months": {
+          "name": "initial_period_months",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "follow_on_rate_pct": {
+          "name": "follow_on_rate_pct",
+          "type": "numeric(5, 3)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "product_fee_gbp": {
+          "name": "product_fee_gbp",
+          "type": "numeric(8, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "captured_at": {
+          "name": "captured_at",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "source_url": {
+          "name": "source_url",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.property": {
+      "name": "property",
+      "schema": "",
+      "columns": {
+        "property_id": {
+          "name": "property_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "uprn": {
+          "name": "uprn",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "location_id": {
+          "name": "location_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "address_line_1": {
+          "name": "address_line_1",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "address_line_2": {
+          "name": "address_line_2",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "city": {
+          "name": "city",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "property_type": {
+          "name": "property_type",
+          "type": "property_type_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tenure": {
+          "name": "tenure",
+          "type": "tenure_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bedrooms": {
+          "name": "bedrooms",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "floor_area_sqm": {
+          "name": "floor_area_sqm",
+          "type": "numeric(8, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "epc_rating": {
+          "name": "epc_rating",
+          "type": "varchar(5)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "epc_score": {
+          "name": "epc_score",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "construction_age_band": {
+          "name": "construction_age_band",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "property_location_id_location_location_id_fk": {
+          "name": "property_location_id_location_location_id_fk",
+          "tableFrom": "property",
+          "tableTo": "location",
+          "columnsFrom": [
+            "location_id"
+          ],
+          "columnsTo": [
+            "location_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "property_uprn_unique": {
+          "name": "property_uprn_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "uprn"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.rental_index": {
+      "name": "rental_index",
+      "schema": "",
+      "columns": {
+        "rental_index_id": {
+          "name": "rental_index_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "region": {
+          "name": "region",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reference_month": {
+          "name": "reference_month",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "index_value": {
+          "name": "index_value",
+          "type": "numeric(8, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "monthly_pct_change": {
+          "name": "monthly_pct_change",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "annual_pct_change": {
+          "name": "annual_pct_change",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "uq_rental_index_region_month": {
+          "name": "uq_rental_index_region_month",
+          "columns": [
+            {
+              "expression": "region",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "reference_month",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.transaction": {
+      "name": "transaction",
+      "schema": "",
+      "columns": {
+        "transaction_id": {
+          "name": "transaction_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "property_id": {
+          "name": "property_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "outcode": {
+          "name": "outcode",
+          "type": "varchar(6)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sale_price": {
+          "name": "sale_price",
+          "type": "numeric(12, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sale_date": {
+          "name": "sale_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "transaction_category": {
+          "name": "transaction_category",
+          "type": "transaction_category_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "idx_transaction_outcode_date": {
+          "name": "idx_transaction_outcode_date",
+          "columns": [
+            {
+              "expression": "outcode",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "\"sale_date\" DESC",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "transaction_property_id_property_property_id_fk": {
+          "name": "transaction_property_id_property_property_id_fk",
+          "tableFrom": "transaction",
+          "tableTo": "property",
+          "columnsFrom": [
+            "property_id"
+          ],
+          "columnsTo": [
+            "property_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "chk_sale_price": {
+          "name": "chk_sale_price",
+          "value": "sale_price > 0 AND sale_price < 100000000"
+        },
+        "chk_sale_date": {
+          "name": "chk_sale_date",
+          "value": "sale_date <= CURRENT_DATE"
+        }
+      },
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.mortgage_type_enum": {
+      "name": "mortgage_type_enum",
+      "schema": "public",
+      "values": [
+        "INTEREST_ONLY",
+        "REPAYMENT"
+      ]
+    },
+    "public.property_type_enum": {
+      "name": "property_type_enum",
+      "schema": "public",
+      "values": [
+        "DETACHED",
+        "SEMI_DETACHED",
+        "TERRACED",
+        "FLAT",
+        "OTHER"
+      ]
+    },
+    "public.tenure_enum": {
+      "name": "tenure_enum",
+      "schema": "public",
+      "values": [
+        "FREEHOLD",
+        "LEASEHOLD",
+        "SHARED_OWNERSHIP"
+      ]
+    },
+    "public.transaction_category_enum": {
+      "name": "transaction_category_enum",
+      "schema": "public",
+      "values": [
+        "STANDARD_SALE",
+        "NEW_BUILD",
+        "OTHER"
+      ]
+    },
+    "public.verdict_enum": {
+      "name": "verdict_enum",
+      "schema": "public",
+      "values": [
+        "CASH_COW",
+        "GROWTH_PLAY",
+        "UNICORN",
+        "AVOID"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

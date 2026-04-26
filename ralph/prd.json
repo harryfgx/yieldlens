@@ -171,7 +171,8 @@
         "Typecheck passes: pnpm typecheck"
       ],
       "priority": 4,
-      "status": "pending"
+      "status": "done",
+      "resolution": "7 tRPC procedures (comparables, historicalDrilldown, compositeScore, quadrant, novelInsight, compareSnapshot, listMortgageProducts) implemented with raw SQL via Drizzle sql template tag. All 4 analytical queries benchmarked at p50 <40ms. EXPLAIN plans captured. 6 unit tests pass. docs/analytical-queries.md populated with factual content. lint/typecheck/test/build all green."
     },
     {
       "title": "US-005: Home Page, Postcode Explorer, and About-the-Data Page",
@@ -199,7 +200,8 @@
         "Typecheck passes: pnpm typecheck"
       ],
       "priority": 5,
-      "status": "pending"
+      "status": "done",
+      "resolution": "Home page with novel insight card, about-the-data page, site nav/footer all implemented and deployed. 9 tests pass. Production returns 200. CI green."
     },
     {
       "title": "US-006: Property Analyser (What-If Calculator) Page",
@@ -227,7 +229,8 @@
         "Typecheck passes: pnpm typecheck"
       ],
       "priority": 6,
-      "status": "pending"
+      "status": "done",
+      "resolution": "Property analyser page with react-hook-form + Zod validation, composite score results, IO vs Repayment mortgage scenarios with Tremor BarChart, sortable comparables table. Fixed @hookform/resolvers v5→v4 for react-hook-form v7 compat. 6 tests pass. Deployed, /analyse returns 200."
     },
     {
       "title": "US-007: Compare, Historical Drill-Down, Quadrant, and Choropleth",

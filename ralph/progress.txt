@@ -2,6 +2,8 @@
 Started: Sun 26 Apr 2026 19:11:33 BST
 
 ## Codebase Patterns
+- vitest v4 needs `@vitejs/plugin-react` + `globals: true` + setup file with `@testing-library/jest-dom/vitest` for React component tests
+- Tests importing ingestion scripts must mock `scripts/ingest/lib/db.js` to prevent process.exit when DIRECT_URL missing in CI
 - `.npmrc` at repo root overrides Amazon CodeArtifact with `registry=https://registry.npmjs.org/`
 - Git identity is repo-scoped: `harryfgoatcher@gmail.com` (not global Amazon email)
 - `DATABASE_URL` (port 6543) for app queries; `DIRECT_URL` (port 5432) for migrations/scripts
@@ -12,6 +14,7 @@ Started: Sun 26 Apr 2026 19:11:33 BST
 - Vitest config at `vitest.config.ts` with `~` alias pointing to `./src`
 - Tests go in `tests/` directory (not `src/__tests__/`)
 - vitest needs `setupFiles: ["dotenv/config"]` for DB-connected tests
+- vitest needs `env: { SKIP_ENV_VALIDATION: "true" }` to avoid T3 server/client env check
 - Tables use raw names (no `yieldlens_` prefix) — drizzle.config.ts has no tablesFilter
 - Empty tRPC router breaks createHydrationHelpers type — always have ≥1 procedure
 - Custom SQL (triggers, functions, matview) applied separately from Drizzle push — not managed by drizzle-kit
@@ -21,6 +24,9 @@ Started: Sun 26 Apr 2026 19:11:33 BST
 - `sql.array()` doesn't handle null values well — use `sql.unsafe()` with parameterized VALUES instead
 - ONS rental/HPI APIs may be unavailable — always have fallback data generation
 - Ingestion scripts use `DIRECT_URL` for bulk writes (bypasses pooler transaction-mode limits)
+- `db.execute()` returns rows already typed as `Record<string, unknown>` — no `as` casts needed
+- Use safe helpers (str/num) for converting unknown DB values to avoid ESLint no-base-to-string errors
+- Scripts need `import "dotenv/config"` at top for DIRECT_URL access
 ---
 
 ## 2026-04-26T19:35 - US-001: Project Scaffold, Infrastructure, and Report Artefact Skeletons
@@ -284,4 +290,99 @@ Started: Sun 26 Apr 2026 19:11:33 BST
   - Land Registry 4GB download can fail with socket close — retry individually if run-all fails
   - DB at 508MB is tight on 500MB free tier — previous run also hit this limit
   - Running scripts individually is more resilient than run-all for large downloads
+---
+
+## 2026-04-26T21:55 - US-004: Four Analytical SQL Queries via tRPC, Benchmarked
+- Created src/server/api/routers/analytics.ts with 7 tRPC procedures
+- Procedures: comparables (Q1), historicalDrilldown (Q2), compositeScore (Q3), quadrant (Q4), novelInsight, compareSnapshot, listMortgageProducts
+- Registered analyticsRouter in src/server/api/root.ts
+- Created 4 SQL evidence files in evidence/05-sql-queries/
+- Captured EXPLAIN (ANALYZE, BUFFERS) plans for all 4 queries
+- Created scripts/benchmark.ts — all queries p50 < 40ms (well under 200ms threshold)
+- Created scripts/capture-explain-plans.ts for reproducible EXPLAIN capture
+- Populated docs/analytical-queries.md with factual content (S11 labels, tables, SQL features)
+- Added SKIP_ENV_VALIDATION to vitest.config.ts for test compatibility with T3 env
+- Files changed: analytics.ts, root.ts, vitest.config.ts, benchmark.ts, capture-explain-plans.ts, 8 evidence files, analytical-queries.md, analytics.test.ts
+- **Acceptance Criteria Verification:**
+  - [x] Precondition: verify-data-quality exits 0
+  - [x] src/server/db/index.ts exports db via DATABASE_URL (already existed)
+  - [x] analytics.ts created with tRPC v11 publicProcedure
+  - [x] Q1 comparables: Zod input, 3-table join, PERCENTILE_CONT, CTE, leading SQL comment
+  - [x] Q2 historicalDrilldown: Zod input, CTEs + window functions (LAG, AVG OVER ROWS), 4 geo levels, UNION ALL
+  - [x] Q3 compositeScore: Zod input, multiple CTEs, NTILE(4), CASE, calls calculate_monthly_payment(), weighted composite
+  - [x] Q4 quadrant: reads from mv_postcode_investment_metrics, returns all outcodes with quadrant
+  - [x] novelInsight: crime premium calculation with fallback
+  - [x] compareSnapshot: Zod input max 4 outcodes, returns from matview
+  - [x] listMortgageProducts: returns all products ordered by lender
+  - [x] analyticsRouter registered in root.ts under 'analytics' namespace
+  - [x] SQL evidence files: q1-q4 .sql files with leading comment blocks
+  - [x] EXPLAIN plans: all 4 files > 500 bytes (q1: 2328, q2: 2109, q3: 4215, q4: 1311)
+  - [x] Benchmark: p50 Q1=36ms Q2=32ms Q3=24ms Q4=9ms — all < 200ms
+  - [x] Unit tests: 6 tests (comparables valid, comparables invalid postcode, historicalDrilldown 4 levels, compositeScore 0-100, quadrant valid values, compareSnapshot 5 outcodes throws)
+  - [x] docs/analytical-queries.md: ≥4 S11 references (7), ≥5 ## headings (11)
+  - [x] pnpm lint: passes (0 warnings)
+  - [x] pnpm typecheck: passes
+  - [x] pnpm test: 20/20 pass
+  - [x] pnpm build: passes
+  - [x] Committed and pushed
+  - [x] Typecheck passes
+- **Testing & Confidence:**
+  - 6 DB-connected analytics tests verify all procedures return correct shapes
+  - Benchmark confirms all queries well under 200ms p50
+  - EXPLAIN plans show efficient index usage
+  - Aligns with AGENTS.md: yes (DATABASE_URL for runtime, DIRECT_URL for scripts)
+- **Learnings for future iterations:**
+  - T3 env validation blocks server-side vars in vitest jsdom — need SKIP_ENV_VALIDATION=true in vitest env
+  - historicalDrilldown is the slowest query (~7s in test due to tRPC dev delay middleware) but p50=32ms in benchmark
+  - postgres.js db.execute() returns rows that are already Record<string, unknown> — no need for type assertions
+  - Safe type conversion helpers (str/num) avoid ESLint no-base-to-string errors on unknown DB values
+---
+
+## 2026-04-26T22:07 - US-005: Home Page, Postcode Explorer, and About-the-Data Page
+- Created src/components/site-nav.tsx: responsive nav with 5 links, mobile hamburger, keyboard-accessible focus rings
+- Created src/components/site-footer.tsx: OGL v3.0 attribution, MIT licence, GitHub, About links
+- Modified src/app/layout.tsx: SiteNav + SiteFooter wrapper, skip-to-content link, html lang="en"
+- Replaced src/app/page.tsx: hero with EXACT tagline, sub-hero ≥80 words, postcode search → /history/[outcode], NovelInsightCard with loading/error/success states, 3 CTA tiles with Lucide icons
+- Created src/config/data-sources.ts: 7 data source entries with name/url/licence/description/volume
+- Created src/app/about/page.tsx: Data Sources list, Methodology (S11 labels + 35/25/20/20 weighting), Known Limitations (5 items), Licence (MIT + OGL v3.0)
+- Added @vitejs/plugin-react + @testing-library/user-event dev deps
+- Updated vitest.config.ts: added React plugin, globals:true, jest-dom setup file
+- Created tests/setup/vitest-setup.ts for jest-dom/vitest integration
+- Fixed pre-existing CI failure: tests/ingest/land-registry.test.ts now mocks db module to prevent process.exit in CI
+- Files changed: 13 files (site-nav, site-footer, layout, page, about/page, data-sources config, vitest config, vitest setup, home test, about test, land-registry test fix, package.json, pnpm-lock)
+- **Acceptance Criteria Verification:**
+  - [x] site-nav.tsx: responsive nav with Home/Analyse/Compare/History/About, mobile hamburger below md, keyboard focus rings
+  - [x] site-footer.tsx: OGL v3.0 attribution, MIT licence link, GitHub link, About link
+  - [x] layout.tsx: SiteNav + SiteFooter wrapping children, html lang="en", skip-to-content link
+  - [x] page.tsx: hero h1 with EXACT tagline, sub-hero ≥80 words (BTL context + Section 24 + EPC), postcode search navigates to /history/[outcode]
+  - [x] NovelInsightCard: useQuery, Skeleton during pending (role=status), Alert with Retry on error, renders title/description/value/methodology
+  - [x] 3 CTA tiles: grid-cols-1 md:grid-cols-3, Calculator/Scale/LineChart icons, /analyse /compare /history hrefs, "Explore →" buttons
+  - [x] src/config/data-sources.ts: 7 entries (Land Registry, ONS HPI, ONS Rental, police, EPC, Postcode Directory, Mortgage Products)
+  - [x] About page: Data Sources list, Methodology with S11 labels + 35/25/20/20, Known Limitations (5 items), Licence (MIT + OGL v3.0)
+  - [x] Focus states on all interactive elements, aria-labels on icons, form inputs labelled, heading hierarchy logical
+  - [x] Mobile responsive: Tailwind sm:/md:/lg: breakpoints, form stacks, cards stack
+  - [x] tests/app/home.test.tsx: 5 tests (hero tagline, Skeleton loading, insight title, 3 CTA hrefs, postcode navigation)
+  - [x] tests/app/about.test.tsx: 4 tests (7 data sources, OGL text, Methodology heading, ≥3 limitations)
+  - [x] Deploy: vercel --prod returns 200 at https://yieldlens-opal.vercel.app
+  - [x] curl home page contains "Know if a London property"
+  - [x] curl /about contains "Open Government Licence v3.0"
+  - [x] pnpm lint: passes (0 warnings)
+  - [x] pnpm typecheck: passes
+  - [x] pnpm test: 29/29 pass (7 test files)
+  - [x] pnpm build: passes
+  - [x] Committed and pushed
+  - [x] CI green (gh run conclusion = success)
+  - [x] Typecheck passes
+- **Testing & Confidence:**
+  - 9 new tests (5 home + 4 about) verify all key UI behaviors
+  - Tests mock tRPC and next/navigation — no network needed
+  - Fixed pre-existing CI failure (land-registry test db mock)
+  - All 29 tests pass locally and in CI
+  - Production deployment verified with curl
+  - Aligns with AGENTS.md: yes (registry override, git identity)
+- **Learnings for future iterations:**
+  - vitest v4 + @testing-library/jest-dom needs `@testing-library/jest-dom/vitest` import in setup file (not direct import)
+  - vitest needs `globals: true` and `@vitejs/plugin-react` for JSX test files
+  - Tests importing ingestion scripts must mock `scripts/ingest/lib/db.js` to prevent process.exit in CI
+  - shadcn Skeleton needs `role="status"` for accessible loading state detection in tests
 ---

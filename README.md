@@ -1,5 +1,10 @@
 # YieldLens
 
+[![CI](https://github.com/harryfgx/yieldlens/actions/workflows/ci.yml/badge.svg)](https://github.com/harryfgx/yieldlens/actions/workflows/ci.yml)
+[![Deploy](https://img.shields.io/badge/Vercel-deployed-black?logo=vercel)](https://yieldlens-opal.vercel.app)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)](https://www.typescriptlang.org/)
+
 **Know if a London property is a good investment before you buy.**
 
 🌐 [Live Demo](https://yieldlens-opal.vercel.app) · 📦 [GitHub](https://github.com/harryfgx/yieldlens)
@@ -19,6 +24,34 @@ The UK buy-to-let market has become increasingly complex for individual investor
 - 🗺️ **Quadrant Classification** — yield vs growth scatter for all London outcodes
 - 🔒 **Crime Choropleth** — borough-level crime rate map
 - 🔍 **Compare** — up to 4 postcodes side-by-side
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────┐
+│                    Vercel Edge                       │
+│  ┌──────────────┐  ┌──────────────┐  ┌───────────┐ │
+│  │  Next.js 15  │  │   tRPC API   │  │  Static   │ │
+│  │  App Router  │──│  (7 procs)   │  │  Assets   │ │
+│  └──────────────┘  └──────┬───────┘  └───────────┘ │
+└────────────────────────────┼────────────────────────┘
+                             │ Drizzle ORM
+                    ┌────────▼────────┐
+                    │    Supabase     │
+                    │  Postgres (EU)  │
+                    │  ┌────────────┐ │
+                    │  │ 8 tables   │ │
+                    │  │ 1 matview  │ │
+                    │  │ 3 functions│ │
+                    │  └────────────┘ │
+                    └─────────────────┘
+         ┌──────────────────┼──────────────────┐
+         │                  │                  │
+   ┌─────▼─────┐    ┌──────▼──────┐    ┌─────▼─────┐
+   │ Land Reg  │    │  ONS HPI /  │    │  Police   │
+   │ Price Paid│    │   Rental    │    │  Crime    │
+   └───────────┘    └─────────────┘    └───────────┘
+```
 
 ## Tech Stack
 

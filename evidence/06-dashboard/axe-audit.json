@@ -1,0 +1,40 @@
+{
+  "auditedAt": "2026-04-26T22:05:55.713Z",
+  "results": [
+    {
+      "route": "/",
+      "violations": [],
+      "passes": 26
+    },
+    {
+      "route": "/analyse",
+      "violations": [],
+      "passes": 27
+    },
+    {
+      "route": "/compare",
+      "violations": [],
+      "passes": 25
+    },
+    {
+      "route": "/history/SE16",
+      "violations": [],
+      "passes": 25
+    },
+    {
+      "route": "/about",
+      "violations": [],
+      "passes": 23
+    },
+    {
+      "route": "/insights/quadrant",
+      "violations": [],
+      "passes": 24
+    },
+    {
+      "route": "/insights/crime-map",
+      "violations": [],
+      "passes": 23
+    }
+  ]
+}

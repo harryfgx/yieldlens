@@ -290,6 +290,7 @@ export default function AnalysePage() {
                     step={1}
                     value={[field.value]}
                     onValueChange={([v]) => field.onChange(v)}
+                    aria-label="Deposit percentage"
                   />
                 </FormControl>
                 <FormMessage />

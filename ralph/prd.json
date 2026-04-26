@@ -258,7 +258,8 @@
         "Typecheck passes: pnpm typecheck"
       ],
       "priority": 7,
-      "status": "pending"
+      "status": "done",
+      "resolution": "Compare page (up to 4 postcodes, bar chart, quadrant scatter), historical drill-down (/history/[outcode] with 4 stacked LineCharts + breadcrumb + key findings), quadrant scatter (/insights/quadrant with all London outcodes), crime choropleth (/insights/crime-map with borough-level bar visualization). Added historicalFindings + crimeByBorough tRPC procedures. Updated site-nav with Insights dropdown. GeoJSON with 33 London boroughs. 10 new tests (5 compare, 2 history, 3 quadrant). All 50 tests pass. Deployed, all routes return 200. CI green."
     },
     {
       "title": "US-008: Quality Gates, Evidence Pack, and Deployment Plan Skeleton",

@@ -101,14 +101,20 @@ export function HistoryClient({
           return (
             <div key={level.key} data-testid={`chart-${level.key}`}>
               <h2 className="mb-2 text-lg font-semibold">{level.title}</h2>
-              <LineChart
-                data={chartData}
-                index="month"
-                categories={["Rolling 12m Avg", "YoY Growth %"]}
-                colors={["blue", "emerald"]}
-                yAxisWidth={70}
-                aria-label={`12-month rolling average trend for ${trendDesc}`}
-              />
+              <div className="mb-1 flex gap-4 text-sm text-muted-foreground">
+                <span className="flex items-center gap-1"><span className="inline-block h-2 w-4 rounded bg-blue-500" /> Rolling 12m Avg</span>
+                <span className="flex items-center gap-1"><span className="inline-block h-2 w-4 rounded bg-emerald-500" /> YoY Growth %</span>
+              </div>
+              <div role="img" aria-label={`12-month rolling average trend for ${trendDesc}`}>
+                <LineChart
+                  data={chartData}
+                  index="month"
+                  categories={["Rolling 12m Avg", "YoY Growth %"]}
+                  colors={["blue", "emerald"]}
+                  yAxisWidth={70}
+                  showLegend={false}
+                />
+              </div>
             </div>
           );
         })}

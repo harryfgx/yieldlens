@@ -1,4 +1,10 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
+
+// Mock the db module to prevent process.exit when DIRECT_URL is missing
+vi.mock("../../scripts/ingest/lib/db.js", () => ({
+  sql: {},
+}));
+
 import { validateRow } from "../../scripts/ingest/land-registry.js";
 
 const londonPostcodes = new Set(["SE16 7PB", "E1 6AN", "SW1A 1AA"]);
